@@ -69,8 +69,8 @@ The Daas Good project is a responsive, single-page website concept built to show
 
 
 ## Live Demo
-
-[Link to live demo - replace with actual URL if deployed]
+ 
+[[Link to live demo -  ](https://anselmem.github.io/TheGoods/)
 
 ## Contact
 
