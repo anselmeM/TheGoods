@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Agency Concept - Intro Text Reveal</title>
+    <title>Design Agency Concept - Adjusted Calendly Height</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
       /* --- Base Styles --- */
       body {
@@ -38,9 +39,13 @@
       .accent-red { color: #FF0000; } /* Red text */
       .bg-accent-red { background-color: #FF0000; } /* Red background */
       .border-accent-red { border-color: #FF0000; } /* Red border */
+      .accent-yellow { color: #FFFF00; } /* Yellow text */
+      .bg-accent-yellow { background-color: #FFFF00; } /* Yellow background */
+      .border-accent-yellow { border-color: #FFFF00; } /* Yellow border */
+
 
       /* --- Component Styles --- */
-      /* Form Inputs & Textarea (Shared by old contact and new newsletter) */
+      /* Form Inputs & Textarea */
       input[type="text"], input[type="email"], textarea {
           background-color: #1a1a1a; /* Dark background */
           border: 1px solid #444; /* Subtle border */
@@ -58,12 +63,12 @@
           border-color: #FF0000; /* Red border on focus */
           box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5); /* Red glow on focus */
       }
-      /* Specific style for newsletter input to match screenshot */
+      /* Specific style for newsletter input */
       #newsletter-email {
           background-color: #FFFFFF;
           color: #000000;
           border: none;
-          border-radius: 0.25rem; /* Slightly less rounded */
+          border-radius: 0.25rem;
       }
        #newsletter-email::placeholder { color: #a0a0a0; }
        #newsletter-email:focus {
@@ -74,25 +79,24 @@
 
       /* Portfolio Item Image Reveal */
       .portfolio-item {
-          min-height: 150px; /* Ensure items have some height */
-          overflow: hidden; /* Clip image during animation */
-          border-radius: 0.5rem; /* Rounded corners */
-          background-color: #1f2937; /* Placeholder background */
-          opacity: 1; /* Start visible (GSAP handles reveal) */
-          position: relative; /* Needed for potential overlays */
+          min-height: 150px;
+          overflow: hidden;
+          border-radius: 0.5rem;
+          background-color: #1f2937;
+          opacity: 1;
+          position: relative;
       }
        .portfolio-item img {
-          width: 100%; height: 100%; object-fit: cover; /* Ensure image covers the container */
+          width: 100%; height: 100%; object-fit: cover;
       }
 
       /* Enhanced Button Hover */
       button, .button {
-          border-radius: 0.5rem; /* Rounded corners */
-          transition: transform 0.2s ease-out, background-color 0.3s, color 0.3s; /* Smooth transitions */
-          position: relative; /* Needed for pseudo-element */
-          overflow: hidden; /* Clip pseudo-element */
-          z-index: 1; /* Ensure text is above pseudo-element */
-          /* Improve rendering performance */
+          border-radius: 0.5rem;
+          transition: transform 0.2s ease-out, background-color 0.3s, color 0.3s;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
           -webkit-backface-visibility: hidden;
           -moz-backface-visibility: hidden;
           -webkit-transform: translate3d(0, 0, 0);
@@ -100,228 +104,247 @@
       }
        button::before, .button::before {
           content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-          background-color: #444; /* Default hover background */
-          transform: scaleX(0); /* Start hidden */
-          transform-origin: right; /* Animate from right to left */
-          transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Smooth cubic bezier */
-          z-index: -1; /* Place behind text */
-          border-radius: inherit; /* Match button's border radius */
+          background-color: #444;
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+          z-index: -1;
+          border-radius: inherit;
        }
-        /* Specific hover background for red buttons */
-        .button.bg-accent-red::before { background-color: #cc0000; } /* Darker red */
+        .button.bg-accent-red::before { background-color: #cc0000; }
         button:hover::before, .button:hover::before {
-            transform: scaleX(1); /* Reveal on hover */
-            transform-origin: left; /* Animate from left to right */
+            transform: scaleX(1);
+            transform-origin: left;
         }
         button:hover, .button:hover {
-            transform: translateY(-4px); /* Slight lift effect on hover */
+            transform: translateY(-4px);
         }
-      /* Consistent rounded corners for inputs/textareas */
       input, textarea, .rounded-lg { border-radius: 0.5rem; }
 
       /* Header CTA Button Specific Styles */
       .header-cta-button {
-          background-color: #FFFF00; /* Yellow background */
-          color: #000000; /* Black text */
+          background-color: #FFFF00;
+          color: #000000;
           font-weight: 700; padding: 0.5rem 1rem; border-radius: 0.5rem;
           text-transform: uppercase; font-size: 0.75rem;
           transition: background-color 0.3s, transform 0.2s ease-out;
-          white-space: nowrap; /* Prevent wrapping */
-          /* Override general button styles that interfere */
+          white-space: nowrap;
           overflow: visible; position: static; z-index: auto;
       }
-       .header-cta-button::before { display: none; } /* Disable the general button hover effect */
+       .header-cta-button::before { display: none; }
        .header-cta-button:hover {
-           background-color: #e6e600; /* Darker yellow on hover */
-           transform: translateY(-4px); /* Keep lift effect */
+           background-color: #e6e600;
+           transform: translateY(-4px);
        }
 
       /* Hero CTA Link Styles */
       .hero-cta-link {
           position: relative; color: #FFFFFF; font-weight: 700;
-          padding-top: 0.5rem; padding-bottom: 0.25rem; /* Adjust padding for underline */
+          padding-top: 0.5rem; padding-bottom: 0.25rem;
           text-transform: uppercase; font-size: 0.875rem;
           display: inline-block; text-decoration: none;
-          transition: opacity 0.3s, transform 0.2s ease-out; /* Smooth transitions */
-          opacity: 0; /* Start hidden for reveal animation */
-          transform: translateY(10px); /* Start slightly lower */
+          transition: opacity 0.3s, transform 0.2s ease-out;
+          opacity: 0;
+          transform: translateY(10px);
       }
        .hero-cta-link:hover {
-           opacity: 0.8; /* Slight fade on hover */
-           transform: translateY(-2px); /* Subtle lift */
+           opacity: 0.8;
+           transform: translateY(-2px);
        }
       .hero-cta-link::after {
           content: ''; position: absolute; width: 100%; height: 1px; bottom: -1px; left: 0;
-          background: #FFFFFF; /* White underline */
-          transition: width 0.3s ease-in-out; /* Animate underline width */
+          background: #FFFFFF;
+          transition: width 0.3s ease-in-out;
       }
-       .hero-cta-link:hover::after { width: 0%; } /* Underline shrinks on hover */
+       .hero-cta-link:hover::after { width: 0%; }
+
+       /* Desktop Navigation Link Hover */
+       .desktop-nav-link {
+           position: relative;
+           padding-bottom: 4px;
+           text-decoration: none;
+           transition: color 0.3s;
+       }
+       .desktop-nav-link::after {
+           content: '';
+           position: absolute;
+           left: 0;
+           bottom: 0;
+           width: 100%;
+           height: 2px;
+           background-color: #FFFF00; /* Yellow color */
+           transform: scaleX(0);
+           transform-origin: left center;
+           transition: transform 0.3s ease-out;
+       }
+       .desktop-nav-link:hover::after {
+           transform: scaleX(1);
+       }
 
       /* --- Logo Marquee Styles --- */
       .logo-marquee-wrapper {
-          overflow: hidden; /* Hide overflowing logos */
-          width: 100%; max-width: 6xl; margin-left: auto; margin-right: auto; /* Centered container */
+          overflow: hidden;
+          width: 100%; max-width: 6xl; margin-left: auto; margin-right: auto;
           padding: 1rem 0; position: relative;
-          /* Fade edges for seamless loop effect */
           mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
           -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
       }
       .logo-scroll-container {
-          display: flex; flex-wrap: nowrap; /* Keep logos in a single line */
-          width: max-content; /* Allow container to be wider than screen */
-          will-change: transform; /* Optimize for animation */
+          display: flex; flex-wrap: nowrap;
+          width: max-content;
+          will-change: transform;
       }
       .svg-logo {
-           max-height: 2.5rem; /* Control logo height */
-           width: 7.5rem; /* Control logo width */
-           opacity: 0.7; /* Slightly faded */
-           transition: opacity 0.3s; /* Smooth opacity transition */
-           color: #FFFFFF; /* Use white for SVG fills/strokes */
-           flex-shrink: 0; /* Prevent logos from shrinking */
-           margin: 0 1.5rem; /* Spacing between logos */
-           display: block; /* Ensure proper layout */
+           max-height: 2.5rem;
+           width: 7.5rem;
+           opacity: 0.7;
+           transition: opacity 0.3s;
+           color: #FFFFFF;
+           flex-shrink: 0;
+           margin: 0 1.5rem;
+           display: block;
       }
-      .svg-logo:hover { opacity: 1.0; } /* Full opacity on hover */
+      .svg-logo:hover { opacity: 1.0; }
 
-      /* Added transition to feature icons */
+      /* Feature icons */
       .plan-features p {
           display: flex; align-items: center; margin-bottom: 0.5rem;
-          color: #d1d5db; /* Light gray text */
+          color: #d1d5db;
           font-size: 0.875rem;
       }
       .plan-features img.feature-icon {
            width: 1rem; height: 1rem; margin-right: 0.5rem;
-           filter: brightness(0) invert(1); /* Make icons white */
+           filter: brightness(0) invert(1);
            opacity: 0.8;
-           transition: transform 0.3s ease-in-out; /* Smooth icon animation */
+           transition: transform 0.3s ease-in-out;
       }
       .plan-features p:hover img.feature-icon {
-           transform: rotate(15deg) scale(1.1); /* Fun rotate/scale on hover */
+           transform: rotate(15deg) scale(1.1);
       }
 
       /* Mobile Menu Styles */
       #mobile-menu {
-        display: none; /* Hidden by default */
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; /* Full screen */
-        background-color: rgba(0, 0, 0, 0.95); /* Dark overlay */
-        z-index: 50; /* Above other content */
+        display: none;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 50;
         padding-top: 5rem; padding-left: 2rem; padding-right: 2rem;
       }
-       #mobile-menu.active { display: flex; flex-direction: column; align-items: center; justify-content: center; } /* Show when active */
+       #mobile-menu.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
        #mobile-menu a { color: white; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 600; }
-       #mobile-menu .header-cta-button { margin-top: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem; } /* Style CTA in menu */
+       #mobile-menu .header-cta-button { margin-top: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem; }
        #close-menu-button { position: absolute; top: 1.5rem; right: 1.5rem; color: white; background: none; border: none; font-size: 2rem; cursor: pointer; }
 
       /* Testimonial Grid Layout */
-      .testimonial-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1.5rem; } /* Mobile: single column */
-      @media (min-width: 768px) { /* Desktop: Masonry-like grid */
+      .testimonial-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1.5rem; }
+      @media (min-width: 768px) {
         .testimonial-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; }
-         .testimonial-item:nth-child(1) { grid-column: span 2 / span 2; grid-row: 1 / 2; } /* Top left, wide */
-         .testimonial-item:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 3; } /* Right, tall */
-         .testimonial-item:nth-child(3) { grid-column: span 2 / span 2; grid-row: 2 / 3; } /* Bottom left, wide */
+         .testimonial-item:nth-child(1) { grid-column: span 2 / span 2; grid-row: 1 / 2; }
+         .testimonial-item:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 3; }
+         .testimonial-item:nth-child(3) { grid-column: span 2 / span 2; grid-row: 2 / 3; }
       }
       .testimonial-item {
-        border: 2px solid #FF0000; /* Red border */
+        border: 2px solid #FF0000;
         padding: 1.5rem; position: relative; min-height: 150px;
-        display: flex; flex-direction: column; justify-content: space-between; /* Space out content */
-        border-radius: 0; /* Sharp corners */
-        opacity: 0; /* Start hidden for GSAP */
-        transition: transform 0.3s ease-out, border-color 0.3s ease-out; /* Smooth hover transitions */
+        display: flex; flex-direction: column; justify-content: space-between;
+        border-radius: 0;
+        opacity: 0;
+        transition: transform 0.3s ease-out, border-color 0.3s ease-out;
       }
       .testimonial-item:hover {
-          transform: translateY(-8px); /* Lift effect on hover */
-          border-color: #FFFF00; /* Change border to yellow on hover */
+          transform: translateY(-8px);
+          border-color: #FFFF00;
       }
       .testimonial-quote-mark {
         font-family: 'Archivo Black', sans-serif; color: #FF0000; font-size: 4rem; line-height: 1;
-        position: absolute; top: 1rem; left: 1.5rem; opacity: 0.8; user-select: none; /* Non-selectable */
+        position: absolute; top: 1rem; left: 1.5rem; opacity: 0.8; user-select: none;
       }
       .testimonial-text {
         font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.875rem; line-height: 1.6;
-        padding-top: 3rem; /* Space below quote mark */
-        margin-bottom: 1rem; flex-grow: 1; /* Allow text to fill space */
+        padding-top: 3rem;
+        margin-bottom: 1rem; flex-grow: 1;
       }
       .testimonial-attribution {
         font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem;
-        text-transform: uppercase; color: #a0a0a0; /* Gray attribution */
+        text-transform: uppercase; color: #a0a0a0;
       }
        .testimonial-attribution span {
-         display: block; font-weight: 400; color: #888888; margin-top: 0.1rem; text-transform: none; /* Sub-line style */
+         display: block; font-weight: 400; color: #888888; margin-top: 0.1rem; text-transform: none;
        }
 
        /* GSAP Reveal Helpers */
-       .gsap-reveal-text { opacity: 0; y: 30px; } /* Initial state for text reveals */
-       .gsap-reveal { opacity: 0; y: 30px; } /* Initial state for general reveals */
-       .asset-item { opacity: 0; y: 20px; } /* Initial state for asset list items */
+       .gsap-reveal-text { opacity: 0; y: 30px; }
+       .gsap-reveal { opacity: 0; y: 30px; }
+       .asset-item { opacity: 0; y: 20px; }
+       .faq-item { opacity: 0; y: 30px; } /* Initial state for FAQ items */
        [data-bgcolor] { /* Optional padding for sections */ }
 
        /* --- Styles for Word Reveal --- */
        .word-wrapper {
-            display: inline-block; /* Allows wrapping */
-            overflow: hidden; /* Clip the word animation */
-            vertical-align: bottom; /* Align properly with surrounding text */
-            margin-right: 0.25em; /* Add space between words */
-            margin-bottom: 0.2em; /* Add slight space below words if they wrap */
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+            margin-right: 0.25em;
+            margin-bottom: 0.2em;
        }
        .word {
-            display: block; /* Needed for yPercent animation */
-            transform-origin: bottom left; /* Optional: Change transform origin */
+            display: block;
+            transform-origin: bottom left;
        }
-       /* Specific styles for hero headline word reveal */
-       #hero-headline .line-wrapper { overflow: hidden; display: block; } /* Wrap each line */
-       #hero-headline .word { display: inline-block; padding-bottom: 0.1em; margin-bottom: -0.1em; } /* Fine-tune spacing */
-       #hero-headline .word-wrapper { margin-right: 0; margin-bottom: 0;} /* Reset spacing for headline */
-       #hero-headline svg { display: inline-block; width: 2.5rem; height: 2.5rem; margin-left: 0.25rem; position: relative; top: -0.25rem; } /* Style inline SVG */
+       #hero-headline .line-wrapper { overflow: hidden; display: block; }
+       #hero-headline .word { display: inline-block; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+       #hero-headline .word-wrapper { margin-right: 0; margin-bottom: 0;}
+       #hero-headline svg { display: inline-block; width: 2.5rem; height: 2.5rem; margin-left: 0.25rem; position: relative; top: -0.25rem; }
        @media (min-width: 768px) { #hero-headline svg { width: 3rem; height: 3rem; top: -0.25rem; } }
        @media (min-width: 1024px) { #hero-headline svg { width: 4rem; height: 4rem; top: -0.5rem; } }
 
        /* --- Styles for Letter Reveal --- */
-       .letter { display: inline-block; } /* Needed for letter stagger */
+       .letter { display: inline-block; }
 
        /* --- Styles for Line Reveal --- */
-       .line-wrapper-nl, .line-wrapper-hero { /* Outer wrapper for clipping */
-            display: block; /* Ensure it takes full width */
+       .line-wrapper-nl, .line-wrapper-hero {
+            display: block;
             overflow: hidden;
        }
-       .line-content-nl, .line-content-hero { /* Inner content to animate */
+       .line-content-nl, .line-content-hero {
             display: block;
        }
 
 
        /* --- CSS Sliding Arrow Animation Styles --- */
-       .arrow-anim-container { position: relative; width: 100%; height: 5rem; overflow: hidden; } /* Container for arrows */
-       .arrow { width: 2rem; height: 2rem; border-style: solid; border-width: 0.75rem; border-color: #374151 transparent transparent #374151; transform: rotate(-45deg); } /* Arrow shape */
-       .arrowSliding { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); animation: slide 4s linear infinite; } /* Position and animation */
-       .delay1 { animation-delay: 1s; } /* Staggered delays */
+       .arrow-anim-container { position: relative; width: 100%; height: 5rem; overflow: hidden; }
+       .arrow { width: 2rem; height: 2rem; border-style: solid; border-width: 0.75rem; border-color: #374151 transparent transparent #374151; transform: rotate(-45deg); }
+       .arrowSliding { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); animation: slide 4s linear infinite; }
+       .delay1 { animation-delay: 1s; }
        .delay2 { animation-delay: 2s; }
        .delay3 { animation-delay: 3s; }
-       @keyframes slide { /* Arrow sliding animation */
-           0% { opacity:0; transform: translate(-50%, -50%) translateX(80px); } /* Start right, faded out */
-           20% { opacity:1; transform: translate(-50%, -50%) translateX(40px); } /* Fade in, move left */
-           80% { opacity:1; transform: translate(-50%, -50%) translateX(-40px); } /* Continue left */
-           100% { opacity:0; transform: translate(-50%, -50%) translateX(-80px); } /* Fade out, end left */
+       @keyframes slide {
+           0% { opacity:0; transform: translate(-50%, -50%) translateX(80px); }
+           20% { opacity:1; transform: translate(-50%, -50%) translateX(40px); }
+           80% { opacity:1; transform: translate(-50%, -50%) translateX(-40px); }
+           100% { opacity:0; transform: translate(-50%, -50%) translateX(-80px); }
        }
 
        /* Service Card Hover Specific Styles */
        #services .service-card {
-           transition: transform 0.3s ease-out, border-color 0.3s ease-out; /* Smooth hover */
+           transition: transform 0.3s ease-out, border-color 0.3s ease-out;
        }
        #services .service-card:hover {
-           transform: translateY(-8px); /* Lift effect */
-           border-left-color: #FF0000; /* Change border to red */
+           transform: translateY(-8px);
+           border-left-color: #FF0000;
        }
        #services .service-icon {
-           transition: transform 0.3s ease-in-out; /* Smooth icon animation */
+           transition: transform 0.3s ease-in-out;
        }
        #services .service-card:hover .service-icon {
-           transform: rotate(15deg) scale(1.1); /* Fun icon animation on card hover */
+           transform: rotate(15deg) scale(1.1);
        }
 
        /* Hero Arrow SVG Line Drawing Initial State */
         #hero-arrow-svg line,
         #hero-arrow-svg polyline {
-            stroke-dasharray: 1; /* Set dash pattern (1 = length of path) */
-            stroke-dashoffset: 1; /* Start with dash offset (path is hidden) */
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
         }
 
         /* Styles for Strikethrough Animation */
@@ -333,11 +356,11 @@
             position: absolute;
             top: 50%;
             left: 0;
-            width: 100%; /* Cover the width */
-            height: 3px; /* Line thickness */
-            background-color: #FF0000; /* Red color */
-            transform: translateY(-50%); /* Vertically center the line */
-            /* Initial state (scaleX: 0, opacity: 0) set by GSAP */
+            width: 100%;
+            height: 3px;
+            background-color: #FF0000;
+            transform: translateY(-50%);
+            /* Initial state set by GSAP */
         }
 
         /* Newsletter Submit Button Style */
@@ -348,15 +371,70 @@
             border-radius: 0.25rem;
             text-transform: uppercase;
             font-weight: 700;
-            font-size: 0.875rem; /* 14px */
-            line-height: 1.25rem; /* 20px */
+            font-size: 0.875rem;
+            line-height: 1.25rem;
             transition: background-color 0.3s, transform 0.2s ease-out;
             border: none;
             cursor: pointer;
         }
         .newsletter-submit-button:hover {
-            background-color: #cc0000; /* Darker red */
+            background-color: #cc0000;
             transform: translateY(-2px);
+        }
+
+        /* FAQ Section Styles */
+        #faq {
+            color: #000000; /* Black text for light background */
+        }
+        .faq-item {
+            border-bottom: 1px solid #9ca3af; /* Gray border */
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 1.5rem 0; /* Vertical padding */
+            text-align: left;
+            font-weight: 600; /* Semibold */
+            font-size: 1.125rem; /* lg */
+            cursor: pointer;
+            color: inherit; /* Inherit black text color */
+            transition: color 0.3s; /* Add transition for text color */
+        }
+        .faq-toggle-icon {
+            flex-shrink: 0;
+            margin-left: 1rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            transition: transform 0.3s ease-out, stroke 0.3s ease-out; /* Added stroke transition */
+            stroke: #4b5563; /* Icon stroke color */
+        }
+        /* Change icon stroke to yellow on question hover */
+        .faq-question:hover .faq-toggle-icon {
+            stroke: #FFFF00;
+        }
+        .faq-item.active .faq-toggle-icon {
+            transform: rotate(45deg); /* Rotate plus to cross */
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            color: #4b5563; /* Darker gray for answer */
+            font-size: 0.875rem; /* sm */
+            line-height: 1.6;
+        }
+        .faq-answer p {
+            margin: 0;
+            padding-bottom: 0; /* Padding added by GSAP */
+        }
+
+        /* Calendly Widget Container */
+        .calendly-widget-container {
+            opacity: 0; /* Start hidden for reveal */
+            y: 30px; /* Start lower for reveal */
         }
 
     </style>
@@ -368,9 +446,9 @@
             <div class="text-lg font-montserrat-bold uppercase-text leading-tight z-10 gsap-reveal"> Daas<br>Good </div>
             <div class="hidden md:flex items-center space-x-8 gsap-reveal">
                 <nav class="flex items-center space-x-6">
-                    <a href="#work" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Work</a>
-                    <a href="#pricing" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Pricing</a>
-                    <a href="#services" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Services</a>
+                    <a href="#work" class="desktop-nav-link uppercase-text text-sm font-semibold">Work</a>
+                    <a href="#pricing" class="desktop-nav-link uppercase-text text-sm font-semibold">Pricing</a>
+                    <a href="#services" class="desktop-nav-link uppercase-text text-sm font-semibold">Services</a>
                 </nav>
                 <a href="#contact" class="button header-cta-button"> Book a Discovery Call </a>
             </div>
@@ -408,8 +486,7 @@
                 <span class="line-wrapper-hero block"><span class="line-content-hero">UNRELIABLE FREELANCERS</span></span><br>
                 <span class="line-wrapper-hero block"><span class="line-content-hero">OR BLOATED AGENCY ANTICS.</span></span>
              </h2>
-             <p id="intro-paragraph" class="text-base md:text-lg">
-                That's right. No contracts. No meetings, and no BS. Our service is 100% practitioner led designed to give you nothing but pixel-perfect work capable of winning the hearts, minds, and wallets of your audiences. Don't believe us? See some of it for yourself.
+             <p id="intro-paragraph" class="text-base md:text-lg text-gray-400"> That's right. No contracts. No meetings, and no BS. Our service is 100% practitioner led designed to give you nothing but pixel-perfect work capable of winning the hearts, minds, and wallets of your audiences. Don't believe us? See some of it for yourself.
              </p>
         </div>
     </section>
@@ -426,7 +503,9 @@
                     <h3 id="about-headline" class="font-headline text-2xl mb-3 uppercase-text">
                         THERE'S GOTTA BE A BETTER WAY TO GET GREAT DESIGN THAT GROWS YOUR BUSINESS.
                     </h3>
-                     <p class="text-gray-400 gsap-reveal"> Hate to break it to you but I've been building creative companies for over 10 years. I've worked with some of the best agencies and brands on the planet and there is no such thing as good, fast, cheap. You get to pick two (if you're lucky). So we picked the two that really matter. And I built a model and offering to solve for just this. </p>
+                     <p id="about-paragraph" class="text-gray-400">
+                        Hate to break it to you but I've been building creative companies for over 10 years. I've worked with some of the best agencies and brands on the planet and there is no such thing as good, fast, cheap. You get to pick two (if you're lucky). So we picked the two that really matter. And I built a model and offering to solve for just this.
+                     </p>
                 </div>
                 <div id="good-fast-cheap-container" class="flex items-center justify-center md:justify-start md:items-start pt-4 md:pt-0">
                     <div class="text-center md:text-left">
@@ -461,7 +540,7 @@
         <section id="partnerships" data-bgcolor="#1f2937" class="py-16 md:py-24 scroll-mt-20">
             <hr class="border-t border-gray-700 mb-12 md:mb-16 max-w-4xl mx-auto gsap-reveal">
             <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16 px-4">
-                <h2 class="text-xl md:text-2xl font-semibold uppercase-text tracking-wider gsap-reveal-text">
+                <h2 id="partnerships-headline" class="text-xl md:text-2xl font-semibold uppercase-text tracking-wider">
                     OUR PROOF IS IN THE PARTNERSHIPS. THE SMALLEST, SMARTEST, AND BIGGEST COMPANIES TAP US FOR GOOD CREATIVE.
                 </h2>
             </div>
@@ -621,8 +700,83 @@
              </div>
          </section>
 
+         <section id="faq" data-bgcolor="#e5e7eb" class="py-16 md:py-24 scroll-mt-20 text-black">
+            <div class="max-w-4xl mx-auto px-6 md:px-8 lg:px-16">
+                <h2 id="faq-headline" class="text-4xl md:text-5xl font-headline mb-12">
+                    FREQUENTLY ASKED QUESTIONS.
+                </h2>
+                <div class="faq-container space-y-4">
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-1">
+                            <span>Why wouldn't I just hire a full-time designer, freelancer, or agency?</span>
+                            <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-1" class="faq-answer">
+                            <p>Good question! For starters, the annual cost of a full-time senior-level designer now exceeds $100,000, plus benefits (and good luck finding one available). Secondly, you may not always have enough work to keep them busy at all times, so you're stuck paying for time you aren't able to utilize. With the monthly plan, you can pause and resume your subscription as often as you need to ensure you're only paying your designer when you have work available for them.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-2">
+                            <span>Is there a limit to how many requests I can have?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-2" class="faq-answer">
+                            <p>Once subscribed, you're able to add as many design requests to your queue as you'd like, and they will be delivered one by one.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-3">
+                            <span>What programs do you design in?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-3" class="faq-answer">
+                            <p>We primarily use industry-standard tools like Figma, Adobe Illustrator, and Adobe Photoshop.</p>
+                        </div>
+                    </div>
+                     <div class="faq-item">
+                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-4">
+                            <span>How do I request designs?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-4" class="faq-answer">
+                            <p>We use a simple project management tool (like Trello or similar) where you can submit requests, provide details, attach files, and track progress easily.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-5">
+                            <span>How fast will I receive my design work?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-5" class="faq-answer">
+                            <p>On average, most requests are completed in just two days or less. However, more complex requests can take longer.</p>
+                        </div>
+                    </div>
+                     <div class="faq-item">
+                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-6">
+                            <span>What if I only have a single request?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-6" class="faq-answer">
+                            <p>That's perfectly fine. You can pause your subscription when finished and return when you have additional design needs. There's no need to let the remainder of your subscription go to waste.</p>
+                        </div>
+                    </div>
+                     <div class="faq-item">
+                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-7">
+                            <span>Are there any refunds if I don't like the service?</span>
+                             <svg class="faq-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <div id="faq-answer-7" class="faq-answer">
+                            <p>Due to the high quality nature of the work, there will be no refunds issued. However, we offer unlimited revisions to ensure you're completely satisfied with the design.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </section>
+
         <section id="testimonials" data-bgcolor="#000000" class="mb-16 md:mb-24 scroll-mt-20">
-             <h2 class="text-2xl md:text-3xl font-headline mb-8 md:mb-12 text-center gsap-reveal-text"> WHAT PEOPLE SAY ABOUT THE DAAS GOOD DIFFERENCE: </h2>
+             <h2 id="testimonials-headline" class="text-2xl md:text-3xl font-headline mb-8 md:mb-12 text-center">
+                WHAT PEOPLE SAY ABOUT THE DAAS GOOD DIFFERENCE:
+             </h2>
             <div class="testimonial-grid max-w-6xl mx-auto">
                 <div class="testimonial-item gsap-reveal">
                     <div class="testimonial-quote-mark">“</div>
@@ -640,6 +794,18 @@
                     <footer class="testimonial-attribution"> Another Happy Founder <span>Founder, B2B MedTech Company</span> </footer>
                 </div>
             </div>
+        </section>
+
+        <section id="booking" data-bgcolor="#000000" class="py-16 md:py-24 text-white">
+             <div class="max-w-4xl mx-auto px-6 md:px-8 lg:px-16">
+                 <h2 id="booking-headline" class="text-3xl md:text-4xl font-headline mb-12 text-center">
+                     DAAS IT. STILL HAVE QUESTIONS? BOOK DISCOVERY CALL
+                 </h2>
+                 <div class="calendly-widget-container gsap-reveal">
+                     <div class="calendly-inline-widget" data-url="https://calendly.com/amotchojr/30min" style="min-width:320px;height:750px;"></div>
+                     <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                     </div>
+             </div>
         </section>
 
         <section id="newsletter" data-bgcolor="#000000" class="py-16 md:py-24">
@@ -860,40 +1026,22 @@
 
              heroTimeline.to(".hero-cta-link.gsap-reveal-from-bottom", { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, "-=0.4");
 
-            // --- Intro Headline Line Reveal (Below Hero Separator) ---
             const introLines = gsap.utils.toArray('#intro-headline .line-content-hero');
             if (introLines.length > 0) {
-                gsap.set(introLines, { yPercent: 105, opacity: 0 }); // Initial state
-                gsap.to(introLines, {
-                    yPercent: 0,
-                    opacity: 1,
-                    stagger: 0.1, // Stagger reveal of each line
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: '#intro-headline', // Trigger based on the headline
-                        start: 'top 85%', // Start when 85% from top enters viewport
-                        toggleActions: 'play none none none' // Play once
-                    }
-                });
+                gsap.set(introLines, { yPercent: 105, opacity: 0 });
+                gsap.to(introLines, { yPercent: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '#intro-headline', start: 'top 85%', toggleActions: 'play none none none' } });
             }
 
-            // --- Intro Paragraph Word Reveal (Below Hero Separator) ---
             const introParagraphWords = splitTextIntoWords('#intro-paragraph');
             if (introParagraphWords.length > 0) {
-                gsap.set(introParagraphWords, { yPercent: 100, opacity: 0 }); // Initial state
-                gsap.to(introParagraphWords, {
-                    yPercent: 0,
-                    opacity: 1,
-                    stagger: 0.02, // Faster stagger for paragraph flow
-                    duration: 0.6,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: '#intro-paragraph', // Trigger based on the paragraph
-                        start: 'top 90%', // Start slightly later than headline might appear
-                        toggleActions: 'play none none none' // Play once
-                    }
-                });
+                gsap.set(introParagraphWords, { yPercent: 100, opacity: 0 });
+                gsap.to(introParagraphWords, { yPercent: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: '#intro-paragraph', start: 'top 90%', toggleActions: 'play none none none' } });
+            }
+
+            const aboutParagraphWords = splitTextIntoWords('#about-paragraph');
+            if (aboutParagraphWords.length > 0) {
+                gsap.set(aboutParagraphWords, { yPercent: 100, opacity: 0 });
+                gsap.to(aboutParagraphWords, { yPercent: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: '#about-paragraph', start: 'top 90%', toggleActions: 'play none none none' } });
             }
 
 
@@ -921,26 +1069,47 @@
                 gsap.to(aboutHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: "#about-headline", start: 'top 80%', toggleActions: 'play none none none' } });
             }
 
-            // --- Newsletter Headline Line Reveal ---
+            const partnershipsHeadlineWords = splitTextIntoWords('#partnerships-headline');
+             if (partnershipsHeadlineWords.length > 0) {
+                 gsap.set(partnershipsHeadlineWords, { yPercent: 100, opacity: 0 });
+                 gsap.to(partnershipsHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: "#partnerships-headline", start: "top 85%", toggleActions: "play none none none" } });
+             }
+
+             const testimonialsHeadlineWords = splitTextIntoWords('#testimonials-headline');
+             if (testimonialsHeadlineWords.length > 0) {
+                 gsap.set(testimonialsHeadlineWords, { yPercent: 100, opacity: 0 });
+                 gsap.to(testimonialsHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: "#testimonials-headline", start: "top 85%", toggleActions: "play none none none" } });
+             }
+
             const newsletterLines = gsap.utils.toArray('#newsletter-headline .line-content-nl');
             if (newsletterLines.length > 0) {
                 gsap.set(newsletterLines, { yPercent: 105, opacity: 0 });
                 gsap.to(newsletterLines, { yPercent: 0, opacity: 1, stagger: 0.15, duration: 1.0, ease: 'power3.out', scrollTrigger: { trigger: '#newsletter-headline', start: 'top 85%', toggleActions: 'play none none none' } });
             }
 
+            const faqHeadlineWords = splitTextIntoWords('#faq-headline');
+             if (faqHeadlineWords.length > 0) {
+                 gsap.set(faqHeadlineWords, { yPercent: 100, opacity: 0 });
+                 gsap.to(faqHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: "#faq-headline", start: "top 85%", toggleActions: "play none none none" } });
+             }
+
+
+            // Filter elements with specific animations from general reveals
+            const animatedTextIds = ['intro-headline', 'hero-headline', 'work-headline', 'services-headline', 'pricing-headline', 'about-headline', 'partnerships-headline', 'testimonials-headline', 'faq-headline'];
+            const animatedRevealIds = ['good-fast-cheap-container', 'intro-paragraph', 'about-paragraph']; // Add IDs of elements with custom word/line reveals
 
             const textElements = gsap.utils.toArray('.gsap-reveal-text');
             textElements.forEach(el => {
                 // Exclude headlines with specific animations
-                if (el.id !== 'intro-headline' && el.id !== 'hero-headline' && el.id !== 'work-headline' && el.id !== 'services-headline' && el.id !== 'pricing-headline' && el.id !== 'about-headline') {
+                if (!animatedTextIds.includes(el.id)) {
                     gsap.to(el, { opacity: 1, y: 0, duration: 2.0, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
                 }
             });
 
             const revealElements = gsap.utils.toArray('.gsap-reveal');
             revealElements.forEach(el => {
-                // Exclude elements with specific animations
-                if (el.id !== 'good-fast-cheap-container' && !el.closest('#newsletter') && el.id !== 'intro-paragraph') { // Also exclude intro paragraph
+                // Exclude elements with specific animations or within sections with custom item animations
+                if (!animatedRevealIds.includes(el.id) && !el.closest('#newsletter') && !el.closest('#faq')) {
                     gsap.to(el, { opacity: 1, y: 0, duration: 2.0, delay: 0.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
                 }
             });
@@ -948,7 +1117,9 @@
              const staggerReveal = (containerSelector, itemSelector) => {
                  const container = document.querySelector(containerSelector);
                  if (!container) return;
-                 const items = gsap.utils.toArray(container.querySelectorAll(itemSelector)).filter(item => !item.closest('#newsletter'));
+                 // Exclude items within newsletter or faq sections
+                 const items = gsap.utils.toArray(container.querySelectorAll(itemSelector))
+                                .filter(item => !item.closest('#newsletter') && !item.closest('#faq'));
                  if (items.length === 0) return;
                  gsap.set(items, { opacity: 0, y: 30 });
                  gsap.to(items, { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2, scrollTrigger: { trigger: container, start: 'top 80%', toggleActions: 'play none none none' } });
@@ -1024,6 +1195,64 @@
                      marqueeWrapper.addEventListener('mouseleave', () => marqueeTween.play());
                  }
              }
+
+             // --- FAQ Accordion ---
+            const faqItems = gsap.utils.toArray(".faq-item");
+            faqItems.forEach(item => {
+                const question = item.querySelector(".faq-question");
+                const answer = item.querySelector(".faq-answer");
+                const icon = item.querySelector(".faq-toggle-icon");
+
+                gsap.set(answer, { height: 0, paddingBottom: 0 }); // Set initial state (hidden)
+
+                question.addEventListener("click", () => {
+                    const isActive = item.classList.contains("active");
+
+                    item.classList.toggle("active");
+                    question.setAttribute('aria-expanded', !isActive);
+
+                    gsap.to(answer, {
+                        height: isActive ? 0 : "auto",
+                        paddingBottom: isActive ? 0 : '1.5rem',
+                        duration: 0.4,
+                        ease: "power1.inOut"
+                    });
+
+                    gsap.to(icon, {
+                        rotation: isActive ? 0 : 45,
+                        duration: 0.3
+                    });
+                });
+            });
+             // --- FAQ Items Stagger Reveal ---
+             const faqRevealItems = gsap.utils.toArray('#faq .faq-item');
+             if(faqRevealItems.length > 0) {
+                gsap.set(faqRevealItems, { opacity: 0, y: 30 }); // Use initial state class
+                gsap.to(faqRevealItems, {
+                    opacity: 1, y: 0, duration: 1.0, ease: 'expo.out', stagger: 0.15, // Slower stagger for FAQ
+                    scrollTrigger: { trigger: '.faq-container', start: 'top 85%', toggleActions: 'play none none none' }
+                });
+             }
+
+             // --- Booking Section Reveal ---
+             const bookingHeadline = document.getElementById('booking-headline');
+             const calendlyWidget = document.querySelector('.calendly-widget-container');
+
+             if(bookingHeadline) {
+                 gsap.set(bookingHeadline, { opacity: 0, y: 30 });
+                 gsap.to(bookingHeadline, {
+                     opacity: 1, y: 0, duration: 1.0, ease: 'expo.out',
+                     scrollTrigger: { trigger: bookingHeadline, start: "top 85%", toggleActions: "play none none none" }
+                 });
+             }
+             if(calendlyWidget) {
+                 gsap.set(calendlyWidget, { opacity: 0, y: 30 });
+                 gsap.to(calendlyWidget, {
+                     opacity: 1, y: 0, duration: 1.0, delay: 0.2, ease: 'expo.out', // Slight delay after headline
+                     scrollTrigger: { trigger: calendlyWidget, start: "top 90%", toggleActions: "play none none none" }
+                 });
+             }
+
 
         }); // End DOMContentLoaded
     </script>
