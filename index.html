@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Agency Concept - Intro Text Reveal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+      /* --- Base Styles --- */
+      body {
+        font-family: 'Montserrat', 'League Spartan', sans-serif;
+        color: #FFFFFF; /* Default text color: White */
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: background-color 0.5s ease-out; /* Smooth background transition */
+        background-color: #000000; /* Default background: Black */
+        overflow-x: hidden; /* Prevent horizontal scroll */
+      }
+      h1, h2, h3, .font-headline {
+        font-family: 'Archivo Black', sans-serif; /* Headline font */
+        font-weight: normal;
+        text-transform: uppercase; /* Headlines are uppercase */
+      }
+      .font-montserrat-bold {
+        font-family: 'Montserrat', 'League Spartan', sans-serif;
+        font-weight: 700; /* Bold Montserrat */
+      }
+      .uppercase-text { text-transform: uppercase; }
+
+      /* --- Accent Colors --- */
+      .accent-red { color: #FF0000; } /* Red text */
+      .bg-accent-red { background-color: #FF0000; } /* Red background */
+      .border-accent-red { border-color: #FF0000; } /* Red border */
+
+      /* --- Component Styles --- */
+      /* Form Inputs & Textarea (Shared by old contact and new newsletter) */
+      input[type="text"], input[type="email"], textarea {
+          background-color: #1a1a1a; /* Dark background */
+          border: 1px solid #444; /* Subtle border */
+          color: #FFFFFF; /* White text */
+          font-family: 'Montserrat', 'League Spartan', sans-serif;
+          padding: 0.75rem 1rem; /* Adjusted padding */
+          border-radius: 0.5rem; /* Rounded corners */
+          transition: border-color 0.3s, box-shadow 0.3s; /* Smooth focus transition */
+          width: 100%; /* Ensure full width */
+          box-sizing: border-box; /* Include padding in width */
+      }
+      input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder { color: #888; } /* Placeholder color */
+      input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+          outline: none; /* Remove default outline */
+          border-color: #FF0000; /* Red border on focus */
+          box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5); /* Red glow on focus */
+      }
+      /* Specific style for newsletter input to match screenshot */
+      #newsletter-email {
+          background-color: #FFFFFF;
+          color: #000000;
+          border: none;
+          border-radius: 0.25rem; /* Slightly less rounded */
+      }
+       #newsletter-email::placeholder { color: #a0a0a0; }
+       #newsletter-email:focus {
+           border-color: #FF0000;
+           box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5);
+       }
+
+
+      /* Portfolio Item Image Reveal */
+      .portfolio-item {
+          min-height: 150px; /* Ensure items have some height */
+          overflow: hidden; /* Clip image during animation */
+          border-radius: 0.5rem; /* Rounded corners */
+          background-color: #1f2937; /* Placeholder background */
+          opacity: 1; /* Start visible (GSAP handles reveal) */
+          position: relative; /* Needed for potential overlays */
+      }
+       .portfolio-item img {
+          width: 100%; height: 100%; object-fit: cover; /* Ensure image covers the container */
+      }
+
+      /* Enhanced Button Hover */
+      button, .button {
+          border-radius: 0.5rem; /* Rounded corners */
+          transition: transform 0.2s ease-out, background-color 0.3s, color 0.3s; /* Smooth transitions */
+          position: relative; /* Needed for pseudo-element */
+          overflow: hidden; /* Clip pseudo-element */
+          z-index: 1; /* Ensure text is above pseudo-element */
+          /* Improve rendering performance */
+          -webkit-backface-visibility: hidden;
+          -moz-backface-visibility: hidden;
+          -webkit-transform: translate3d(0, 0, 0);
+          -moz-transform: translate3d(0, 0, 0);
+      }
+       button::before, .button::before {
+          content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+          background-color: #444; /* Default hover background */
+          transform: scaleX(0); /* Start hidden */
+          transform-origin: right; /* Animate from right to left */
+          transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Smooth cubic bezier */
+          z-index: -1; /* Place behind text */
+          border-radius: inherit; /* Match button's border radius */
+       }
+        /* Specific hover background for red buttons */
+        .button.bg-accent-red::before { background-color: #cc0000; } /* Darker red */
+        button:hover::before, .button:hover::before {
+            transform: scaleX(1); /* Reveal on hover */
+            transform-origin: left; /* Animate from left to right */
+        }
+        button:hover, .button:hover {
+            transform: translateY(-4px); /* Slight lift effect on hover */
+        }
+      /* Consistent rounded corners for inputs/textareas */
+      input, textarea, .rounded-lg { border-radius: 0.5rem; }
+
+      /* Header CTA Button Specific Styles */
+      .header-cta-button {
+          background-color: #FFFF00; /* Yellow background */
+          color: #000000; /* Black text */
+          font-weight: 700; padding: 0.5rem 1rem; border-radius: 0.5rem;
+          text-transform: uppercase; font-size: 0.75rem;
+          transition: background-color 0.3s, transform 0.2s ease-out;
+          white-space: nowrap; /* Prevent wrapping */
+          /* Override general button styles that interfere */
+          overflow: visible; position: static; z-index: auto;
+      }
+       .header-cta-button::before { display: none; } /* Disable the general button hover effect */
+       .header-cta-button:hover {
+           background-color: #e6e600; /* Darker yellow on hover */
+           transform: translateY(-4px); /* Keep lift effect */
+       }
+
+      /* Hero CTA Link Styles */
+      .hero-cta-link {
+          position: relative; color: #FFFFFF; font-weight: 700;
+          padding-top: 0.5rem; padding-bottom: 0.25rem; /* Adjust padding for underline */
+          text-transform: uppercase; font-size: 0.875rem;
+          display: inline-block; text-decoration: none;
+          transition: opacity 0.3s, transform 0.2s ease-out; /* Smooth transitions */
+          opacity: 0; /* Start hidden for reveal animation */
+          transform: translateY(10px); /* Start slightly lower */
+      }
+       .hero-cta-link:hover {
+           opacity: 0.8; /* Slight fade on hover */
+           transform: translateY(-2px); /* Subtle lift */
+       }
+      .hero-cta-link::after {
+          content: ''; position: absolute; width: 100%; height: 1px; bottom: -1px; left: 0;
+          background: #FFFFFF; /* White underline */
+          transition: width 0.3s ease-in-out; /* Animate underline width */
+      }
+       .hero-cta-link:hover::after { width: 0%; } /* Underline shrinks on hover */
+
+      /* --- Logo Marquee Styles --- */
+      .logo-marquee-wrapper {
+          overflow: hidden; /* Hide overflowing logos */
+          width: 100%; max-width: 6xl; margin-left: auto; margin-right: auto; /* Centered container */
+          padding: 1rem 0; position: relative;
+          /* Fade edges for seamless loop effect */
+          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      }
+      .logo-scroll-container {
+          display: flex; flex-wrap: nowrap; /* Keep logos in a single line */
+          width: max-content; /* Allow container to be wider than screen */
+          will-change: transform; /* Optimize for animation */
+      }
+      .svg-logo {
+           max-height: 2.5rem; /* Control logo height */
+           width: 7.5rem; /* Control logo width */
+           opacity: 0.7; /* Slightly faded */
+           transition: opacity 0.3s; /* Smooth opacity transition */
+           color: #FFFFFF; /* Use white for SVG fills/strokes */
+           flex-shrink: 0; /* Prevent logos from shrinking */
+           margin: 0 1.5rem; /* Spacing between logos */
+           display: block; /* Ensure proper layout */
+      }
+      .svg-logo:hover { opacity: 1.0; } /* Full opacity on hover */
+
+      /* Added transition to feature icons */
+      .plan-features p {
+          display: flex; align-items: center; margin-bottom: 0.5rem;
+          color: #d1d5db; /* Light gray text */
+          font-size: 0.875rem;
+      }
+      .plan-features img.feature-icon {
+           width: 1rem; height: 1rem; margin-right: 0.5rem;
+           filter: brightness(0) invert(1); /* Make icons white */
+           opacity: 0.8;
+           transition: transform 0.3s ease-in-out; /* Smooth icon animation */
+      }
+      .plan-features p:hover img.feature-icon {
+           transform: rotate(15deg) scale(1.1); /* Fun rotate/scale on hover */
+      }
+
+      /* Mobile Menu Styles */
+      #mobile-menu {
+        display: none; /* Hidden by default */
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; /* Full screen */
+        background-color: rgba(0, 0, 0, 0.95); /* Dark overlay */
+        z-index: 50; /* Above other content */
+        padding-top: 5rem; padding-left: 2rem; padding-right: 2rem;
+      }
+       #mobile-menu.active { display: flex; flex-direction: column; align-items: center; justify-content: center; } /* Show when active */
+       #mobile-menu a { color: white; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 600; }
+       #mobile-menu .header-cta-button { margin-top: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem; } /* Style CTA in menu */
+       #close-menu-button { position: absolute; top: 1.5rem; right: 1.5rem; color: white; background: none; border: none; font-size: 2rem; cursor: pointer; }
+
+      /* Testimonial Grid Layout */
+      .testimonial-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1.5rem; } /* Mobile: single column */
+      @media (min-width: 768px) { /* Desktop: Masonry-like grid */
+        .testimonial-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; }
+         .testimonial-item:nth-child(1) { grid-column: span 2 / span 2; grid-row: 1 / 2; } /* Top left, wide */
+         .testimonial-item:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 3; } /* Right, tall */
+         .testimonial-item:nth-child(3) { grid-column: span 2 / span 2; grid-row: 2 / 3; } /* Bottom left, wide */
+      }
+      .testimonial-item {
+        border: 2px solid #FF0000; /* Red border */
+        padding: 1.5rem; position: relative; min-height: 150px;
+        display: flex; flex-direction: column; justify-content: space-between; /* Space out content */
+        border-radius: 0; /* Sharp corners */
+        opacity: 0; /* Start hidden for GSAP */
+        transition: transform 0.3s ease-out, border-color 0.3s ease-out; /* Smooth hover transitions */
+      }
+      .testimonial-item:hover {
+          transform: translateY(-8px); /* Lift effect on hover */
+          border-color: #FFFF00; /* Change border to yellow on hover */
+      }
+      .testimonial-quote-mark {
+        font-family: 'Archivo Black', sans-serif; color: #FF0000; font-size: 4rem; line-height: 1;
+        position: absolute; top: 1rem; left: 1.5rem; opacity: 0.8; user-select: none; /* Non-selectable */
+      }
+      .testimonial-text {
+        font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.875rem; line-height: 1.6;
+        padding-top: 3rem; /* Space below quote mark */
+        margin-bottom: 1rem; flex-grow: 1; /* Allow text to fill space */
+      }
+      .testimonial-attribution {
+        font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem;
+        text-transform: uppercase; color: #a0a0a0; /* Gray attribution */
+      }
+       .testimonial-attribution span {
+         display: block; font-weight: 400; color: #888888; margin-top: 0.1rem; text-transform: none; /* Sub-line style */
+       }
+
+       /* GSAP Reveal Helpers */
+       .gsap-reveal-text { opacity: 0; y: 30px; } /* Initial state for text reveals */
+       .gsap-reveal { opacity: 0; y: 30px; } /* Initial state for general reveals */
+       .asset-item { opacity: 0; y: 20px; } /* Initial state for asset list items */
+       [data-bgcolor] { /* Optional padding for sections */ }
+
+       /* --- Styles for Word Reveal --- */
+       .word-wrapper {
+            display: inline-block; /* Allows wrapping */
+            overflow: hidden; /* Clip the word animation */
+            vertical-align: bottom; /* Align properly with surrounding text */
+            margin-right: 0.25em; /* Add space between words */
+            margin-bottom: 0.2em; /* Add slight space below words if they wrap */
+       }
+       .word {
+            display: block; /* Needed for yPercent animation */
+            transform-origin: bottom left; /* Optional: Change transform origin */
+       }
+       /* Specific styles for hero headline word reveal */
+       #hero-headline .line-wrapper { overflow: hidden; display: block; } /* Wrap each line */
+       #hero-headline .word { display: inline-block; padding-bottom: 0.1em; margin-bottom: -0.1em; } /* Fine-tune spacing */
+       #hero-headline .word-wrapper { margin-right: 0; margin-bottom: 0;} /* Reset spacing for headline */
+       #hero-headline svg { display: inline-block; width: 2.5rem; height: 2.5rem; margin-left: 0.25rem; position: relative; top: -0.25rem; } /* Style inline SVG */
+       @media (min-width: 768px) { #hero-headline svg { width: 3rem; height: 3rem; top: -0.25rem; } }
+       @media (min-width: 1024px) { #hero-headline svg { width: 4rem; height: 4rem; top: -0.5rem; } }
+
+       /* --- Styles for Letter Reveal --- */
+       .letter { display: inline-block; } /* Needed for letter stagger */
+
+       /* --- Styles for Line Reveal --- */
+       .line-wrapper-nl, .line-wrapper-hero { /* Outer wrapper for clipping */
+            display: block; /* Ensure it takes full width */
+            overflow: hidden;
+       }
+       .line-content-nl, .line-content-hero { /* Inner content to animate */
+            display: block;
+       }
+
+
+       /* --- CSS Sliding Arrow Animation Styles --- */
+       .arrow-anim-container { position: relative; width: 100%; height: 5rem; overflow: hidden; } /* Container for arrows */
+       .arrow { width: 2rem; height: 2rem; border-style: solid; border-width: 0.75rem; border-color: #374151 transparent transparent #374151; transform: rotate(-45deg); } /* Arrow shape */
+       .arrowSliding { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); animation: slide 4s linear infinite; } /* Position and animation */
+       .delay1 { animation-delay: 1s; } /* Staggered delays */
+       .delay2 { animation-delay: 2s; }
+       .delay3 { animation-delay: 3s; }
+       @keyframes slide { /* Arrow sliding animation */
+           0% { opacity:0; transform: translate(-50%, -50%) translateX(80px); } /* Start right, faded out */
+           20% { opacity:1; transform: translate(-50%, -50%) translateX(40px); } /* Fade in, move left */
+           80% { opacity:1; transform: translate(-50%, -50%) translateX(-40px); } /* Continue left */
+           100% { opacity:0; transform: translate(-50%, -50%) translateX(-80px); } /* Fade out, end left */
+       }
+
+       /* Service Card Hover Specific Styles */
+       #services .service-card {
+           transition: transform 0.3s ease-out, border-color 0.3s ease-out; /* Smooth hover */
+       }
+       #services .service-card:hover {
+           transform: translateY(-8px); /* Lift effect */
+           border-left-color: #FF0000; /* Change border to red */
+       }
+       #services .service-icon {
+           transition: transform 0.3s ease-in-out; /* Smooth icon animation */
+       }
+       #services .service-card:hover .service-icon {
+           transform: rotate(15deg) scale(1.1); /* Fun icon animation on card hover */
+       }
+
+       /* Hero Arrow SVG Line Drawing Initial State */
+        #hero-arrow-svg line,
+        #hero-arrow-svg polyline {
+            stroke-dasharray: 1; /* Set dash pattern (1 = length of path) */
+            stroke-dashoffset: 1; /* Start with dash offset (path is hidden) */
+        }
+
+        /* Styles for Strikethrough Animation */
+        .cheap-text-container {
+            position: relative;
+            display: inline-block;
+        }
+        .cross-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%; /* Cover the width */
+            height: 3px; /* Line thickness */
+            background-color: #FF0000; /* Red color */
+            transform: translateY(-50%); /* Vertically center the line */
+            /* Initial state (scaleX: 0, opacity: 0) set by GSAP */
+        }
+
+        /* Newsletter Submit Button Style */
+        .newsletter-submit-button {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.875rem; /* 14px */
+            line-height: 1.25rem; /* 20px */
+            transition: background-color 0.3s, transform 0.2s ease-out;
+            border: none;
+            cursor: pointer;
+        }
+        .newsletter-submit-button:hover {
+            background-color: #cc0000; /* Darker red */
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body class="text-white antialiased">
+
+    <section id="hero-section" data-bgcolor="#FF0000" class="text-white px-6 md:px-8 lg:px-16 py-6 md:py-8">
+        <header class="relative flex justify-between items-center mb-12 md:mb-16 py-4">
+            <div class="text-lg font-montserrat-bold uppercase-text leading-tight z-10 gsap-reveal"> Daas<br>Good </div>
+            <div class="hidden md:flex items-center space-x-8 gsap-reveal">
+                <nav class="flex items-center space-x-6">
+                    <a href="#work" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Work</a>
+                    <a href="#pricing" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Pricing</a>
+                    <a href="#services" class="hover:opacity-80 uppercase-text text-sm font-semibold transition-opacity">Services</a>
+                </nav>
+                <a href="#contact" class="button header-cta-button"> Book a Discovery Call </a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-2xl rounded p-1 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-white z-10" aria-label="Open Menu" aria-controls="mobile-menu" aria-expanded="false">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg>
+             </button>
+        </header>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-12 md:mb-16">
+            <div>
+                <h1 id="hero-headline" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl uppercase-text leading-none font-headline">
+                    <span class="line-wrapper">A DESIGN</span><br>
+                    <span class="line-wrapper">PARTNER THAT</span><br>
+                    <span class="line-wrapper">DOESNT DROP</span><br>
+                    <span class="line-wrapper">THE BALL
+                        <svg id="hero-arrow-svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="">
+                            <line x1="7" y1="7" x2="17" y2="17" pathLength="1"></line>
+                            <polyline points="7 17 17 17 17 7" pathLength="1"></polyline>
+                        </svg>
+                    </span>
+                </h1>
+            </div>
+            <div class="lg:pl-8">
+                <p id="hero-subheadline" class="text-base md:text-lg font-montserrat-bold uppercase-text mb-4">
+                    FOR BUSINESSES WHO NEED<br>
+                    GOOD CREATIVE WITHOUT<br>
+                    THE HASSLE OR HEADACHES.
+                </p>
+                <a href="#contact" class="hero-cta-link gsap-reveal-from-bottom"> Book an Intro Call </a>
+            </div>
+        </div>
+        <div id="hero-separator" class="text-[9rem] md:text-[12rem] leading-none font-black text-center inline-block py-8 md:py-10">*</div>
+        <div class="max-w-3xl pb-12 md:pb-16">
+             <h2 id="intro-headline" class="text-3xl md:text-4xl uppercase-text mb-4 font-headline">
+                <span class="line-wrapper-hero block"><span class="line-content-hero">STOP STRUGGLING WITH</span></span><br>
+                <span class="line-wrapper-hero block"><span class="line-content-hero">UNRELIABLE FREELANCERS</span></span><br>
+                <span class="line-wrapper-hero block"><span class="line-content-hero">OR BLOATED AGENCY ANTICS.</span></span>
+             </h2>
+             <p id="intro-paragraph" class="text-base md:text-lg">
+                That's right. No contracts. No meetings, and no BS. Our service is 100% practitioner led designed to give you nothing but pixel-perfect work capable of winning the hearts, minds, and wallets of your audiences. Don't believe us? See some of it for yourself.
+             </p>
+        </div>
+    </section>
+
+    <main class="px-6 md:px-8 lg:px-16 py-12">
+
+        <section id="about" data-bgcolor="#1f2937" class="mb-20 md:mb-28 scroll-mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-t border-b border-gray-800 py-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-start space-x-4 mb-6 gsap-reveal">
+                        <img src="https://source.unsplash.com/64x64/?portrait,professional,man" alt="Pete Sena, Co-Founder" class="w-16 h-16 rounded-full object-cover flex-shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/64x64/1a1a1a/ffffff?text=PS';">
+                        <div> <p class="font-bold">Pete Sena,</p> <p class="text-sm text-gray-400">Co-Founder</p> </div>
+                    </div>
+                    <h3 id="about-headline" class="font-headline text-2xl mb-3 uppercase-text">
+                        THERE'S GOTTA BE A BETTER WAY TO GET GREAT DESIGN THAT GROWS YOUR BUSINESS.
+                    </h3>
+                     <p class="text-gray-400 gsap-reveal"> Hate to break it to you but I've been building creative companies for over 10 years. I've worked with some of the best agencies and brands on the planet and there is no such thing as good, fast, cheap. You get to pick two (if you're lucky). So we picked the two that really matter. And I built a model and offering to solve for just this. </p>
+                </div>
+                <div id="good-fast-cheap-container" class="flex items-center justify-center md:justify-start md:items-start pt-4 md:pt-0">
+                    <div class="text-center md:text-left">
+                        <p id="good-text" class="font-headline text-4xl uppercase-text leading-tight">GOOD</p>
+                        <p id="fast-text" class="font-headline text-4xl uppercase-text leading-tight">FAST</p>
+                        <div class="cheap-text-container">
+                             <p id="cheap-text" class="font-headline text-4xl uppercase-text leading-tight text-gray-600">CHEAP</p>
+                             <span class="cross-line block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta-section" data-bgcolor="#000000" class="mb-24 md:mb-32 flex flex-col md:flex-row items-start md:items-center gap-6">
+            <div class="arrow-anim-container flex-shrink-0 w-24 md:w-32">
+              <div class="arrowSliding"> <div class="arrow"></div> </div>
+              <div class="arrowSliding delay1"> <div class="arrow"></div> </div>
+              <div class="arrowSliding delay2"> <div class="arrow"></div> </div>
+              <div class="arrowSliding delay3"> <div class="arrow"></div> </div>
+            </div>
+            <div>
+                 <h3 class="font-headline text-2xl md:text-3xl uppercase-text gsap-reveal-text">
+                     STOP WAITING MONTHS AND SETTLING FOR MEDIOCRITY.
+                 </h3>
+                 <p class="text-lg text-gray-300 gsap-reveal">
+                     START GETTING THE GOOD WORK YOUR BUSINESS NEEDS IN DAYS OR WEEKS INSTEAD.
+                 </p>
+            </div>
+        </section>
+
+        <section id="partnerships" data-bgcolor="#1f2937" class="py-16 md:py-24 scroll-mt-20">
+            <hr class="border-t border-gray-700 mb-12 md:mb-16 max-w-4xl mx-auto gsap-reveal">
+            <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16 px-4">
+                <h2 class="text-xl md:text-2xl font-semibold uppercase-text tracking-wider gsap-reveal-text">
+                    OUR PROOF IS IN THE PARTNERSHIPS. THE SMALLEST, SMARTEST, AND BIGGEST COMPANIES TAP US FOR GOOD CREATIVE.
+                </h2>
+            </div>
+            <div class="logo-marquee-wrapper">
+                <div class="logo-scroll-container">
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo1Title"> <title id="svgLogo1Title">Client Logo 1</title> <rect width="120" height="40" fill="#333"/> <circle cx="30" cy="20" r="12" fill="currentColor"/> <rect x="55" y="10" width="55" height="20" fill="currentColor" opacity="0.7"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo2Title"> <title id="svgLogo2Title">Client Logo 2</title> <rect width="120" height="40" fill="#222"/> <path d="M10 10 L50 30 L90 10 L110 30" stroke="currentColor" stroke-width="4" fill="none"/> <path d="M10 30 L50 10 L90 30 L110 10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.6"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo3Title"> <title id="svgLogo3Title">Client Logo 3</title> <rect width="120" height="40" fill="#444"/> <polygon points="10,10 40,30 10,30" fill="currentColor"/> <polygon points="50,10 80,30 50,30" fill="currentColor" opacity="0.8"/> <polygon points="90,10 120,30 90,30" fill="currentColor" opacity="0.6"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo4Title"> <title id="svgLogo4Title">Client Logo 4</title> <rect width="120" height="40" fill="#222"/> <line x1="10" y1="20" x2="110" y2="20" stroke="currentColor" stroke-width="3"/> <line x1="20" y1="10" x2="100" y2="30" stroke="currentColor" stroke-width="3" opacity="0.7"/> <line x1="20" y1="30" x2="100" y2="10" stroke="currentColor" stroke-width="3" opacity="0.7"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo5Title"> <title id="svgLogo5Title">Client Logo 5</title> <rect width="120" height="40" fill="#333"/> <rect x="10" y="5" width="30" height="30" fill="currentColor"/> <circle cx="75" cy="20" r="15" stroke="currentColor" stroke-width="4" fill="none"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo6Title"> <title id="svgLogo6Title">Client Logo 6</title> <rect width="120" height="40" fill="#222"/> <ellipse cx="60" cy="20" rx="50" ry="15" fill="currentColor" opacity="0.5"/> <ellipse cx="60" cy="20" rx="30" ry="9" fill="currentColor"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo7Title"> <title id="svgLogo7Title">Client Logo 7</title> <rect width="120" height="40" fill="#444"/> <path d="M 20 10 C 40 40, 80 0, 100 30" stroke="currentColor" stroke-width="4" fill="none"/> </svg>
+                    <svg class="svg-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgLogo8Title"> <title id="svgLogo8Title">Client Logo 8</title> <rect width="120" height="40" fill="#333"/> <rect x="10" y="10" width="20" height="20" fill="currentColor"/> <rect x="35" y="10" width="20" height="20" fill="currentColor" opacity="0.8"/> <rect x="60" y="10" width="20" height="20" fill="currentColor" opacity="0.6"/> <rect x="85" y="10" width="20" height="20" fill="currentColor" opacity="0.4"/> </svg>
+                    </div>
+            </div>
+        </section>
+
+        <section id="work" data-bgcolor="#000000" class="mb-24 md:mb-32 scroll-mt-20">
+             <h2 id="work-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
+                 DAAS GOOD WORK
+             </h2>
+             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-16 md:mb-20">
+                 <div class="portfolio-item col-span-2 md:col-span-2 lg:col-span-2 row-span-2"> <img src="https://placehold.co/600x600/1f2937/ffffff?text=Portfolio+Item+1" alt="Website Design Example"> </div>
+                 <div class="portfolio-item"> <img src="https://placehold.co/300x300/1f2937/ffffff?text=Portfolio+Item+2" alt="Branding Example"> </div>
+                 <div class="portfolio-item"> <img src="https://placehold.co/300x300/1f2937/ffffff?text=Portfolio+Item+3" alt="UI/UX Example"> </div>
+                 <div class="portfolio-item col-span-2 md:col-span-1 lg:col-span-2"> <img src="https://placehold.co/600x300/1f2937/ffffff?text=Portfolio+Item+4" alt="Graphic Design Example Wide"> </div>
+                 <div class="portfolio-item"> <img src="https://placehold.co/300x300/1f2937/ffffff?text=Portfolio+Item+5" alt="Packaging Example"> </div>
+                 <div class="portfolio-item"> <img src="https://placehold.co/300x300/1f2937/ffffff?text=Portfolio+Item+6" alt="Social Media Example"> </div>
+                 <div class="portfolio-item row-span-2"> <img src="https://placehold.co/300x600/1f2937/ffffff?text=Portfolio+Item+7" alt="Dashboard UI Example Tall"> </div>
+                 <div class="portfolio-item"> <img src="https://placehold.co/300x300/1f2937/ffffff?text=Portfolio+Item+8" alt="Collateral Example"> </div>
+             </div>
+             <div id="asset-list-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 <div class="md:col-span-1 text-left pt-8 md:pt-0 md:self-end">
+                     <p id="asset-intro-text" class="text-sm uppercase-text mb-4 text-gray-400"> WE DESIGN KEY ASSETS AND EXPERIENCES THAT HELP YOU CONNECT WITH YOUR CUSTOMERS </p>
+                     <hr class="border-t-2 border-accent-red max-w-[100px] ml-0 gsap-reveal">
+                 </div>
+                 <div id="asset-list" class="md:col-span-2 text-left md:text-right">
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Logos</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Collateral</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Slide Decks</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Landing Pages</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Packaging</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Blog Graphics</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Brochures</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Websites</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Social Content</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Digital Ads</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Sales Materials</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Billboards</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Emails</p>
+                      <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Business Cards</p>
+                      <p class="text-sm text-gray-400 mt-6 gsap-reveal"> Whatever assets you need we got your back. </p>
+                 </div>
+             </div>
+             </section>
+
+        <section id="services" data-bgcolor="#FF0000" class="mb-24 md:mb-32 scroll-mt-20">
+             <h2 id="services-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
+                 SERVICES
+             </h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                     <div class="flex items-center mb-2">
+                         <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/layout-template.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                         <h3 class="font-montserrat-bold text-2xl uppercase-text">WEB DESIGN</h3>
+                     </div>
+                     <p class="text-gray-400 pl-9">Creating visually stunning and highly functional websites tailored to your brand.</p>
+                 </div>
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                     <div class="flex items-center mb-2">
+                         <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/palette.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                         <h3 class="font-montserrat-bold text-2xl uppercase-text">BRANDING</h3>
+                     </div>
+                     <p class="text-gray-400 pl-9">Developing strong brand identities that resonate with your target audience.</p>
+                 </div>
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                     <div class="flex items-center mb-2">
+                         <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/mouse-pointer-click.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                         <h3 class="font-montserrat-bold text-2xl uppercase-text">UI/UX DESIGN</h3>
+                     </div>
+                     <p class="text-gray-400 pl-9">Designing intuitive and engaging user interfaces for optimal user experience.</p>
+                 </div>
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                     <div class="flex items-center mb-2">
+                          <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/image.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                         <h3 class="font-montserrat-bold text-2xl uppercase-text">GRAPHIC DESIGN</h3>
+                     </div>
+                     <p class="text-gray-400 pl-9">Crafting compelling visuals for digital and print media.</p>
+                 </div>
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                     <div class="flex items-center mb-2">
+                         <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/message-circle.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
+                         <h3 class="font-montserrat-bold text-2xl uppercase-text">CONSULTING</h3>
+                     </div>
+                     <p class="text-gray-400 pl-9">Providing expert advice to elevate your design strategy.</p>
+                 </div>
+                 </div>
+         </section>
+
+        <section id="pricing" data-bgcolor="#1f2937" class="mb-24 md:mb-32 scroll-mt-20">
+             <h2 id="pricing-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
+                 PRICING PLANS
+             </h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+                 <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD</h3>
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-4">CREATIVE DIRECTION</h3>
+                     <p class="text-gray-400 mb-6 flex-grow text-sm">Work with a fractional Senior Creative Director...</p>
+                     <div class="plan-features mb-6 flex-grow space-y-1">
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/video.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">4 Video Calls Each Month</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/lightbulb.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Creative Direction & Feedback</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/image-off.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">No Asset Creation</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/pause-circle.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Pause / Cancel Anytime</p>
+                     </div>
+                     <div class="text-3xl font-bold mb-6">$1k / mo.</div>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                 </div>
+                 <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD</h3>
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-4">DESIGN</h3>
+                     <p class="text-gray-400 mb-6 flex-grow text-sm">Senior Designers walk through your design requests one request at a time...</p>
+                     <div class="plan-features mb-6 flex-grow space-y-1">
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/workflow.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">One Workflow at a time</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/database.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">24/7 Platform Access</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/refresh-cw.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Unlimited Revisions</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/pause-circle.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Pause / Cancel Anytime</p>
+                     </div>
+                     <div class="text-3xl font-bold mb-6">$10k / mo.</div>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                 </div>
+                 <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD</h3>
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-4">PROJECT SPRINTS</h3>
+                     <p class="text-gray-400 mb-6 flex-grow text-sm">Have a specific need, but can't commit to a subscription? Our project sprint gives you the design horsepower...</p>
+                     <div class="plan-features mb-6 flex-grow space-y-1">
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/clock.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Up to 80 hours of design work</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/layout-grid.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">24/7 Access to Figma & Trello</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/refresh-cw.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Unlimited Revisions</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/users.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Dedicated Team</p>
+                     </div>
+                     <div class="text-3xl font-bold mb-6">$15k Flat Fee</div>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                 </div>
+                 <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD, BUT I</h3>
+                     <h3 class="font-montserrat-bold text-xl uppercase-text mb-4">NEED MORE...</h3>
+                     <p class="text-gray-400 mb-6 flex-grow text-sm">Looking for more workstreams or throughput? Have longer-term projects? We build custom subscription plans...</p>
+                     <div class="plan-features mb-6 flex-grow space-y-1">
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/git-fork.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Multiple Workstreams</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/zap.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Additional Capabilities</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/database.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">24/7 Platform Access</p>
+                         <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/refresh-cw.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Unlimited Revisions</p>
+                     </div>
+                     <div class="text-3xl font-bold mb-6">Custom</div>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Build Your Plan</button>
+                 </div>
+             </div>
+         </section>
+
+        <section id="testimonials" data-bgcolor="#000000" class="mb-16 md:mb-24 scroll-mt-20">
+             <h2 class="text-2xl md:text-3xl font-headline mb-8 md:mb-12 text-center gsap-reveal-text"> WHAT PEOPLE SAY ABOUT THE DAAS GOOD DIFFERENCE: </h2>
+            <div class="testimonial-grid max-w-6xl mx-auto">
+                <div class="testimonial-item gsap-reveal">
+                    <div class="testimonial-quote-mark">“</div>
+                    <p class="testimonial-text"> NOT ONLY DID DAAS GOOD TURN VAGUE IDEAS INTO A FULL-FLESHED SAAS, BUT THEY WENT BEYOND BY CREATING AN ENTIRE BRAND FOR EASYGEN. AND LET ME TELL YOU: THAT, WAS GOOD. </p>
+                    <footer class="testimonial-attribution"> Ruben Hassid <span>Founder of EasyGen</span> </footer>
+                </div>
+                <div class="testimonial-item gsap-reveal">
+                    <div class="testimonial-quote-mark">“</div>
+                    <p class="testimonial-text"> I'D NEVER WORK WITH ANOTHER AGENCY OR FREELANCER AGAIN. THEIR SERVICE IS THAT GOOD. THE SPEED AND QUALITY ARE UNMATCHED. PERIOD. </p>
+                    <footer class="testimonial-attribution"> Satisfied Client <span>CMO, B2C Apparel Company</span> </footer>
+                </div>
+                <div class="testimonial-item gsap-reveal">
+                    <div class="testimonial-quote-mark">“</div>
+                    <p class="testimonial-text"> DAAS GOOD DID EVERYTHING FROM BUSINESS CARDS TO THE LOOK AND FEEL OF OUR WEBSITE, ALL IN SUCH A SHORT PERIOD OF TIME. IT HELPED US A TON. </p>
+                    <footer class="testimonial-attribution"> Another Happy Founder <span>Founder, B2B MedTech Company</span> </footer>
+                </div>
+            </div>
+        </section>
+
+        <section id="newsletter" data-bgcolor="#000000" class="py-16 md:py-24">
+            <div class="max-w-6xl mx-auto px-6 md:px-8 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
+                <div>
+                    <h2 id="newsletter-headline" class="text-3xl sm:text-4xl lg:text-5xl font-headline leading-tight mb-4">
+                       <span class="line-wrapper-nl block"><span class="line-content-nl">WANT TO STAY IN THE</span></span>
+                       <span class="line-wrapper-nl block"><span class="line-content-nl">KNOW AND SEE GOOD</span></span>
+                       <span class="line-wrapper-nl block"><span class="line-content-nl">WORK SEMI-REGULARLY?</span></span>
+                    </h2>
+                    <p class="text-gray-400 text-sm gsap-reveal">Don't worry. We won't spam you.</p> </div>
+                <div class="gsap-reveal"> <form id="newsletter-form" class="space-y-4">
+                        <div>
+                            <label for="newsletter-email" class="sr-only">Email Address</label>
+                            <input type="email" id="newsletter-email" name="email" placeholder="Email Address" required>
+                             <p class="text-red-500 text-xs mt-1 error-message hidden" id="newsletter-email-error">Please enter a valid email.</p>
+                        </div>
+                        <div>
+                            <button type="submit" class="newsletter-submit-button w-full md:w-auto">Submit</button>
+                        </div>
+                        <div id="newsletter-form-status" class="mt-2 text-sm"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer data-bgcolor="#000000" class="px-6 md:px-8 lg:px-16 py-8 border-t border-gray-800 gsap-reveal">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                 <div class="text-lg font-montserrat-bold uppercase-text leading-tight mb-2 inline-block border border-white px-2 py-1"> Daas<br>Good </div>
+                 <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> Daas Good. All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Terms & Conditions</a>
+            </div>
+        </div>
+     </footer>
+
+    <div id="mobile-menu">
+        <button id="close-menu-button" aria-label="Close Menu">&times;</button>
+        <nav class="flex flex-col items-center justify-center h-full">
+            <a href="#work" class="mobile-nav-link">Work</a>
+            <a href="#pricing" class="mobile-nav-link">Pricing</a>
+            <a href="#services" class="mobile-nav-link">Services</a>
+            <a href="#contact" class="button header-cta-button mobile-nav-link"> Book a Discovery Call </a>
+        </nav>
+    </div>
+
+    <script>
+        // --- Standard JS Functionality ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle
+        const menuButton = document.getElementById('mobile-menu-button');
+        const closeButton = document.getElementById('close-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+        function openMenu() { mobileMenu.classList.add('active'); menuButton.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; if (closeButton) closeButton.focus(); }
+        function closeMenu() { mobileMenu.classList.remove('active'); menuButton.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; if (menuButton) menuButton.focus(); }
+        menuButton.addEventListener('click', openMenu);
+        closeButton.addEventListener('click', closeMenu);
+        mobileNavLinks.forEach(link => { link.addEventListener('click', closeMenu); });
+
+        // Basic Newsletter Form Handling (Placeholder)
+        const newsletterForm = document.getElementById('newsletter-form');
+        const newsletterFormStatus = document.getElementById('newsletter-form-status');
+        const newsletterEmailInput = document.getElementById('newsletter-email');
+
+        function showNewsletterError(message) {
+            const errorEl = document.getElementById('newsletter-email-error');
+            if(errorEl){ errorEl.textContent = message; errorEl.classList.remove('hidden'); newsletterEmailInput?.setAttribute('aria-invalid', 'true'); }
+        }
+        function hideNewsletterError() {
+             const errorEl = document.getElementById('newsletter-email-error');
+             if(errorEl){ errorEl.classList.add('hidden'); newsletterEmailInput?.removeAttribute('aria-invalid'); }
+        }
+
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                hideNewsletterError();
+                newsletterFormStatus.textContent = '';
+                newsletterFormStatus.className = 'mt-2 text-sm';
+                const email = newsletterEmailInput.value.trim();
+                if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+                    showNewsletterError('Please enter a valid email address.');
+                    newsletterFormStatus.textContent = 'Invalid email.';
+                    newsletterFormStatus.classList.add('text-red-500');
+                    return;
+                }
+                newsletterFormStatus.textContent = 'Submitting...';
+                newsletterFormStatus.classList.add('text-yellow-500');
+                setTimeout(() => {
+                    newsletterFormStatus.textContent = 'Thanks for subscribing!';
+                    newsletterFormStatus.classList.remove('text-yellow-500');
+                    newsletterFormStatus.classList.add('text-green-500');
+                    newsletterForm.reset();
+                }, 1500);
+            });
+        }
+
+
+        // --- GSAP Animations ---
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+             function splitTextIntoLetters(selector) {
+                 const element = document.querySelector(selector);
+                 if (!element) { console.warn(`Element not found: ${selector}`); return []; }
+                 let textContent = element.textContent.trim();
+                 let letters = textContent.split('');
+                 element.innerHTML = '';
+                 let letterSpans = [];
+                 letters.forEach(letter => {
+                     const letterSpan = document.createElement('span');
+                     letterSpan.classList.add('letter');
+                     letterSpan.style.display = 'inline-block';
+                     letterSpan.innerHTML = letter === ' ' ? '&nbsp;' : letter;
+                     element.appendChild(letterSpan);
+                     letterSpans.push(letterSpan);
+                 });
+                 return letterSpans;
+             }
+
+             function splitTextIntoWords(selector) {
+                 const element = document.querySelector(selector);
+                 if (!element) { console.warn(`Element not found: ${selector}`); return []; }
+                 const childNodes = Array.from(element.childNodes);
+                 element.innerHTML = '';
+                 let wordSpans = [];
+                 childNodes.forEach(node => {
+                     if (node.nodeType === Node.TEXT_NODE) {
+                         const text = node.textContent;
+                         const words = text.split(/\s+/).filter(word => word.length > 0);
+                         words.forEach(word => {
+                             const wordWrapper = document.createElement('span');
+                             wordWrapper.classList.add('word-wrapper');
+                             wordWrapper.style.display = 'inline-block';
+                             wordWrapper.style.overflow = 'hidden';
+                             wordWrapper.style.verticalAlign = 'bottom';
+                             wordWrapper.style.marginRight = '0.25em';
+                             wordWrapper.style.marginBottom = '0.2em';
+                             const wordSpan = document.createElement('span');
+                             wordSpan.classList.add('word');
+                             wordSpan.textContent = word;
+                             wordSpan.style.display = 'block';
+                             wordWrapper.appendChild(wordSpan);
+                             element.appendChild(wordWrapper);
+                             wordSpans.push(wordSpan);
+                         });
+                     } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'br') {
+                         element.appendChild(node.cloneNode(false));
+                     }
+                 });
+                 return wordSpans;
+             }
+
+            const firstSectionColor = document.querySelector('[data-bgcolor]')?.dataset.bgcolor || '#000000';
+            gsap.set('body', { backgroundColor: firstSectionColor });
+
+            const sections = gsap.utils.toArray('[data-bgcolor]');
+            sections.forEach((section) => {
+                const bgColor = section.dataset.bgcolor;
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top 60%", end: "bottom 40%",
+                    onEnter: () => gsap.to('body', { backgroundColor: bgColor, duration: 0.5, ease: 'none', overwrite: 'auto' }),
+                    onEnterBack: () => gsap.to('body', { backgroundColor: bgColor, duration: 0.5, ease: 'none', overwrite: 'auto' })
+                });
+            });
+
+            let heroTimeline = gsap.timeline({ delay: 0.5 });
+
+            const headline = document.getElementById('hero-headline');
+            if (headline) {
+                const lines = headline.querySelectorAll('.line-wrapper');
+                let allHeadlineWords = [];
+                lines.forEach((line) => {
+                    const svgElement = line.querySelector('svg');
+                    let textContent = line.textContent.trim();
+                    let words = textContent.split(' ').filter(word => word.length > 0);
+                    line.innerHTML = '';
+                    words.forEach((word, wordIndex) => {
+                        const wordWrapper = document.createElement('span');
+                        wordWrapper.classList.add('word-wrapper');
+                        wordWrapper.style.marginRight = '0'; wordWrapper.style.marginBottom = '0';
+                        wordWrapper.style.display = 'inline-block'; wordWrapper.style.overflow = 'hidden'; wordWrapper.style.verticalAlign = 'bottom';
+                        const wordSpan = document.createElement('span');
+                        wordSpan.textContent = word; wordSpan.classList.add('word'); wordSpan.style.display = 'block';
+                        wordSpan.style.paddingBottom = '0.1em'; wordSpan.style.marginBottom = '-0.1em';
+                        wordWrapper.appendChild(wordSpan); line.appendChild(wordWrapper);
+                        if (wordIndex < words.length - 1 || svgElement) { line.appendChild(document.createTextNode(' ')); }
+                        allHeadlineWords.push(wordSpan);
+                    });
+                    if (svgElement) { line.appendChild(svgElement); }
+                });
+                gsap.set(allHeadlineWords, { yPercent: 105, opacity: 0 });
+                heroTimeline.to(allHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.6, ease: 'power3.out' });
+
+                const arrowSVG = document.getElementById('hero-arrow-svg');
+                if (arrowSVG) {
+                    const paths = arrowSVG.querySelectorAll('line, polyline');
+                    if (paths.length > 0) {
+                         gsap.set(paths, { strokeDashoffset: 1 });
+                         heroTimeline.to(paths, { strokeDashoffset: 0, duration: 0.6, ease: 'power1.inOut', stagger: 0.2 }, "-=0.2");
+                    }
+                }
+            }
+
+            const heroSubheadlineWords = splitTextIntoWords('#hero-subheadline');
+            if (heroSubheadlineWords.length > 0) {
+                gsap.set(heroSubheadlineWords, { yPercent: 100, opacity: 0 });
+                heroTimeline.to(heroSubheadlineWords, { yPercent: 0, opacity: 1, stagger: 0.06, duration: 0.7, ease: 'power3.out' }, "-=0.3");
+            }
+
+             heroTimeline.to(".hero-cta-link.gsap-reveal-from-bottom", { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, "-=0.4");
+
+            // --- Intro Headline Line Reveal (Below Hero Separator) ---
+            const introLines = gsap.utils.toArray('#intro-headline .line-content-hero');
+            if (introLines.length > 0) {
+                gsap.set(introLines, { yPercent: 105, opacity: 0 }); // Initial state
+                gsap.to(introLines, {
+                    yPercent: 0,
+                    opacity: 1,
+                    stagger: 0.1, // Stagger reveal of each line
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: '#intro-headline', // Trigger based on the headline
+                        start: 'top 85%', // Start when 85% from top enters viewport
+                        toggleActions: 'play none none none' // Play once
+                    }
+                });
+            }
+
+            // --- Intro Paragraph Word Reveal (Below Hero Separator) ---
+            const introParagraphWords = splitTextIntoWords('#intro-paragraph');
+            if (introParagraphWords.length > 0) {
+                gsap.set(introParagraphWords, { yPercent: 100, opacity: 0 }); // Initial state
+                gsap.to(introParagraphWords, {
+                    yPercent: 0,
+                    opacity: 1,
+                    stagger: 0.02, // Faster stagger for paragraph flow
+                    duration: 0.6,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '#intro-paragraph', // Trigger based on the paragraph
+                        start: 'top 90%', // Start slightly later than headline might appear
+                        toggleActions: 'play none none none' // Play once
+                    }
+                });
+            }
+
+
+            const workHeadlineSpans = splitTextIntoLetters('#work-headline');
+            if (workHeadlineSpans.length > 0) {
+                gsap.set(workHeadlineSpans, { opacity: 0, y: 20 });
+                gsap.to(workHeadlineSpans, { opacity: 1, y: 0, duration: 1.5, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: "#work-headline", start: 'top 80%', toggleActions: 'play none none none' } });
+            }
+
+            const servicesHeadlineSpans = splitTextIntoLetters('#services-headline');
+            if (servicesHeadlineSpans.length > 0) {
+                gsap.set(servicesHeadlineSpans, { opacity: 0, y: 20 });
+                gsap.to(servicesHeadlineSpans, { opacity: 1, y: 0, duration: 1.5, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: "#services-headline", start: 'top 80%', toggleActions: 'play none none none' } });
+            }
+
+             const pricingHeadlineSpans = splitTextIntoLetters('#pricing-headline');
+             if (pricingHeadlineSpans.length > 0) {
+                 gsap.set(pricingHeadlineSpans, { opacity: 0, y: 20 });
+                 gsap.to(pricingHeadlineSpans, { opacity: 1, y: 0, duration: 1.5, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: "#pricing-headline", start: 'top 80%', toggleActions: 'play none none none' } });
+             }
+
+            const aboutHeadlineWords = splitTextIntoWords('#about-headline');
+            if (aboutHeadlineWords.length > 0) {
+                gsap.set(aboutHeadlineWords, { yPercent: 105, opacity: 0 });
+                gsap.to(aboutHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.1, duration: 1.0, ease: 'expo.out', scrollTrigger: { trigger: "#about-headline", start: 'top 80%', toggleActions: 'play none none none' } });
+            }
+
+            // --- Newsletter Headline Line Reveal ---
+            const newsletterLines = gsap.utils.toArray('#newsletter-headline .line-content-nl');
+            if (newsletterLines.length > 0) {
+                gsap.set(newsletterLines, { yPercent: 105, opacity: 0 });
+                gsap.to(newsletterLines, { yPercent: 0, opacity: 1, stagger: 0.15, duration: 1.0, ease: 'power3.out', scrollTrigger: { trigger: '#newsletter-headline', start: 'top 85%', toggleActions: 'play none none none' } });
+            }
+
+
+            const textElements = gsap.utils.toArray('.gsap-reveal-text');
+            textElements.forEach(el => {
+                // Exclude headlines with specific animations
+                if (el.id !== 'intro-headline' && el.id !== 'hero-headline' && el.id !== 'work-headline' && el.id !== 'services-headline' && el.id !== 'pricing-headline' && el.id !== 'about-headline') {
+                    gsap.to(el, { opacity: 1, y: 0, duration: 2.0, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                }
+            });
+
+            const revealElements = gsap.utils.toArray('.gsap-reveal');
+            revealElements.forEach(el => {
+                // Exclude elements with specific animations
+                if (el.id !== 'good-fast-cheap-container' && !el.closest('#newsletter') && el.id !== 'intro-paragraph') { // Also exclude intro paragraph
+                    gsap.to(el, { opacity: 1, y: 0, duration: 2.0, delay: 0.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                }
+            });
+
+             const staggerReveal = (containerSelector, itemSelector) => {
+                 const container = document.querySelector(containerSelector);
+                 if (!container) return;
+                 const items = gsap.utils.toArray(container.querySelectorAll(itemSelector)).filter(item => !item.closest('#newsletter'));
+                 if (items.length === 0) return;
+                 gsap.set(items, { opacity: 0, y: 30 });
+                 gsap.to(items, { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2, scrollTrigger: { trigger: container, start: 'top 80%', toggleActions: 'play none none none' } });
+             };
+
+             const portfolioItems = gsap.utils.toArray('.portfolio-item');
+             portfolioItems.forEach((item, index) => {
+                 const img = item.querySelector('img');
+                 if (img) {
+                     gsap.set(item, { opacity: 1 });
+                     gsap.set(img, { scale: 1.1, opacity: 0, yPercent: 0 });
+                     gsap.to(img, { scale: 1, opacity: 1, yPercent: 0, duration: 1.8, ease: 'expo.out', scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' }, delay: (index % 3) * 0.15 });
+                 }
+             });
+
+             staggerReveal('#services .grid', '.gsap-reveal');
+             staggerReveal('#pricing .grid', '.gsap-reveal');
+             staggerReveal('.testimonial-grid', '.testimonial-item');
+             // Stagger reveal for newsletter columns (form side only now)
+             const newsletterItems = gsap.utils.toArray('#newsletter .grid > .gsap-reveal');
+             if(newsletterItems.length > 0) {
+                gsap.set(newsletterItems, { opacity: 0, y: 30 });
+                gsap.to(newsletterItems, { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2, scrollTrigger: { trigger: '#newsletter', start: 'top 80%', toggleActions: 'play none none none' } });
+             }
+
+
+             const assetList = document.getElementById('asset-list');
+             if (assetList) {
+                 gsap.to(gsap.utils.toArray(assetList.querySelectorAll('.asset-item')), { opacity: 1, y: 0, duration: 2.0, ease: 'expo.out', stagger: 0.3, scrollTrigger: { trigger: assetList, start: 'top 85%', toggleActions: 'play none none none' } });
+             }
+
+             const assetIntroWords = splitTextIntoWords('#asset-intro-text');
+             if (assetIntroWords.length > 0) {
+                 gsap.set(assetIntroWords, { yPercent: 100, opacity: 0 });
+                 gsap.to(assetIntroWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: "#asset-intro-text", start: "top 90%", toggleActions: "play none none none" } });
+             }
+
+             const gfcContainer = document.getElementById('good-fast-cheap-container');
+             if (gfcContainer) {
+                 const goodLetters = splitTextIntoLetters('#good-text');
+                 const fastLetters = splitTextIntoLetters('#fast-text');
+                 const cheapLetters = splitTextIntoLetters('#cheap-text');
+                 const crossLines = gfcContainer.querySelectorAll('.cross-line');
+                 gsap.set([...goodLetters, ...fastLetters, ...cheapLetters], { opacity: 0, y: 20 });
+                 gsap.set(crossLines, { scaleX: 0, opacity: 0 });
+                 let gfcTimeline = gsap.timeline({ scrollTrigger: { trigger: gfcContainer, start: "top 80%", toggleActions: "play none none none" } });
+                 if (goodLetters.length > 0) { gfcTimeline.to(goodLetters, { opacity: 1, y: 0, stagger: 0.1, duration: 1.0, ease: 'expo.out' }); }
+                 if (fastLetters.length > 0) { gfcTimeline.to(fastLetters, { opacity: 1, y: 0, stagger: 0.1, duration: 1.0, ease: 'expo.out' }, "-=0.5"); }
+                 if (cheapLetters.length > 0) {
+                     gfcTimeline.to(cheapLetters, { opacity: 1, y: 0, stagger: 0.1, duration: 1.0, ease: 'expo.out' }, "-=0.5");
+                     if (crossLines.length > 0) {
+                        gfcTimeline.to(crossLines, { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, "-=0.7");
+                     }
+                 }
+             }
+
+             const marqueeWrapper = document.querySelector('.logo-marquee-wrapper');
+             const marqueeContainer = document.querySelector('.logo-scroll-container');
+             if (marqueeContainer && marqueeWrapper) {
+                 const logos = marqueeContainer.querySelectorAll('.svg-logo');
+                 if (logos.length > 0) {
+                     const cloneCount = 5;
+                     for (let i = 0; i < cloneCount; i++) { logos.forEach(logo => { marqueeContainer.appendChild(logo.cloneNode(true)); }); }
+                     let totalWidth = 0;
+                     logos.forEach(logo => {
+                         const style = window.getComputedStyle(logo);
+                         const marginRight = parseFloat(style.marginRight) || 0;
+                         const marginLeft = parseFloat(style.marginLeft) || 0;
+                         totalWidth += (logo.scrollWidth || logo.getBoundingClientRect().width) + marginLeft + marginRight;
+                     });
+                     let marqueeTween = gsap.to(marqueeContainer, { x: () => `-${totalWidth}px`, duration: 25, ease: "none", repeat: -1, });
+                     marqueeWrapper.addEventListener('mouseenter', () => marqueeTween.pause());
+                     marqueeWrapper.addEventListener('mouseleave', () => marqueeTween.play());
+                 }
+             }
+
+        }); // End DOMContentLoaded
+    </script>
+</body>
+</html>
