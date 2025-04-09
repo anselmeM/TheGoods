@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Agency Concept - Adjusted Calendly Height</title>
+    <title>Design Agency Concept - Updated Intro Para Styles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +29,8 @@
         font-weight: normal;
         text-transform: uppercase; /* Headlines are uppercase */
       }
+      /* Removed word-spacing rule for hero headline */
+
       .font-montserrat-bold {
         font-family: 'Montserrat', 'League Spartan', sans-serif;
         font-weight: 700; /* Bold Montserrat */
@@ -116,8 +118,9 @@
             transform: scaleX(1);
             transform-origin: left;
         }
-        button:hover, .button:hover {
-            transform: translateY(-4px);
+        /* Prevent hover transform if magnetic button class is present */
+        button:not(.magnetic-button):hover, .button:not(.magnetic-button):hover {
+             transform: translateY(-4px);
         }
       input, textarea, .rounded-lg { border-radius: 0.5rem; }
 
@@ -134,7 +137,7 @@
        .header-cta-button::before { display: none; }
        .header-cta-button:hover {
            background-color: #e6e600;
-           transform: translateY(-4px);
+           /* transform: translateY(-4px); */ /* Let magnetic effect handle transform */
        }
 
       /* Hero CTA Link Styles */
@@ -235,7 +238,7 @@
        #mobile-menu .header-cta-button { margin-top: 1rem; font-size: 1rem; padding: 0.75rem 1.5rem; }
        #close-menu-button { position: absolute; top: 1.5rem; right: 1.5rem; color: white; background: none; border: none; font-size: 2rem; cursor: pointer; }
 
-      /* Testimonial Grid Layout */
+      /* Testimonial Grid Layout & SVG Border */
       .testimonial-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1.5rem; }
       @media (min-width: 768px) {
         .testimonial-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; }
@@ -244,20 +247,31 @@
          .testimonial-item:nth-child(3) { grid-column: span 2 / span 2; grid-row: 2 / 3; }
       }
       .testimonial-item {
-        border: 2px solid #FF0000;
         padding: 1.5rem; position: relative; min-height: 150px;
         display: flex; flex-direction: column; justify-content: space-between;
         border-radius: 0;
-        opacity: 0;
-        transition: transform 0.3s ease-out, border-color 0.3s ease-out;
+        opacity: 0; /* Start hidden for GSAP */
+        transition: transform 0.3s ease-out;
+        position: relative; /* Needed for SVG positioning */
       }
       .testimonial-item:hover {
           transform: translateY(-8px);
-          border-color: #FFFF00;
       }
+       /* Style for the SVG border */
+       .testimonial-border-rect {
+           stroke-dasharray: 1; /* Total length of path */
+           stroke-dashoffset: 1; /* Start hidden */
+           transition: stroke-dashoffset 0.5s ease-in-out, stroke 0.3s ease-out; /* Added stroke transition */
+       }
+       /* Optional: Change border color on hover */
+        .testimonial-item:hover .testimonial-border-rect {
+            stroke: #FFFF00;
+        }
+
       .testimonial-quote-mark {
         font-family: 'Archivo Black', sans-serif; color: #FF0000; font-size: 4rem; line-height: 1;
         position: absolute; top: 1rem; left: 1.5rem; opacity: 0.8; user-select: none;
+        z-index: 5; /* Ensure quote mark is above potential border SVG issues */
       }
       .testimonial-text {
         font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.875rem; line-height: 1.6;
@@ -284,29 +298,39 @@
             display: inline-block;
             overflow: hidden;
             vertical-align: bottom;
-            margin-right: 0.25em;
-            margin-bottom: 0.2em;
+            /* Removed margins for tighter layout */
        }
        .word {
             display: block;
             transform-origin: bottom left;
        }
-       #hero-headline .line-wrapper { overflow: hidden; display: block; }
-       #hero-headline .word { display: inline-block; padding-bottom: 0.1em; margin-bottom: -0.1em; }
-       #hero-headline .word-wrapper { margin-right: 0; margin-bottom: 0;}
-       #hero-headline svg { display: inline-block; width: 2.5rem; height: 2.5rem; margin-left: 0.25rem; position: relative; top: -0.25rem; }
-       @media (min-width: 768px) { #hero-headline svg { width: 3rem; height: 3rem; top: -0.25rem; } }
-       @media (min-width: 1024px) { #hero-headline svg { width: 4rem; height: 4rem; top: -0.5rem; } }
+       /* Add space back via pseudo-element if needed, or rely on natural space */
+        .word-wrapper + .word-wrapper::before {
+            content: " "; /* Ensure space between words */
+        }
+        /* Specific styles for hero headline word reveal */
+        #hero-headline .line-wrapper { overflow: hidden; display: block; }
+        #hero-headline .word { display: inline-block; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+        /* Remove margin for hero headline words as word-spacing is now used */
+        #hero-headline .word-wrapper { margin-right: 0; margin-bottom: 0;}
+        /* Remove space added by ::before for hero headline */
+        #hero-headline .word-wrapper + .word-wrapper::before { content: ""; }
+
+        #hero-headline svg { display: inline-block; width: 2.5rem; height: 2.5rem; margin-left: 0.25rem; position: relative; top: -0.25rem; }
+        @media (min-width: 768px) { #hero-headline svg { width: 3rem; height: 3rem; top: -0.25rem; } }
+        @media (min-width: 1024px) { #hero-headline svg { width: 4rem; height: 4rem; top: -0.5rem; } }
+
 
        /* --- Styles for Letter Reveal --- */
        .letter { display: inline-block; }
 
        /* --- Styles for Line Reveal --- */
-       .line-wrapper-nl, .line-wrapper-hero {
+       /* Renamed from -nl and -hero to generic -anim */
+       .line-wrapper-anim {
             display: block;
             overflow: hidden;
        }
-       .line-content-nl, .line-content-hero {
+       .line-content-anim {
             display: block;
        }
 
@@ -437,6 +461,15 @@
             y: 30px; /* Start lower for reveal */
         }
 
+        /* Asterisk Continuous Spin */
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin 15s linear infinite; /* Adjust 15s for speed */
+        }
+
     </style>
 </head>
 <body class="text-white antialiased">
@@ -450,28 +483,27 @@
                     <a href="#pricing" class="desktop-nav-link uppercase-text text-sm font-semibold">Pricing</a>
                     <a href="#services" class="desktop-nav-link uppercase-text text-sm font-semibold">Services</a>
                 </nav>
-                <a href="#contact" class="button header-cta-button"> Book a Discovery Call </a>
+                <a href="#contact" class="button header-cta-button magnetic-button"> Book a Discovery Call </a>
             </div>
             <button id="mobile-menu-button" class="md:hidden text-2xl rounded p-1 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-white z-10" aria-label="Open Menu" aria-controls="mobile-menu" aria-expanded="false">
                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg>
              </button>
         </header>
+
+        <div class="mb-12 md:mb-16"> <h1 id="hero-headline" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl uppercase-text leading-none font-headline">
+                <span class="line-wrapper-anim block"><span class="line-content-anim">A DESIGN</span></span>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">PARTNER THAT</span></span>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">DOESNT DROP</span></span>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">THE BALL
+                    <svg id="hero-arrow-svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="">
+                        <line x1="7" y1="7" x2="17" y2="17" pathLength="1"></line>
+                        <polyline points="7 17 17 17 17 7" pathLength="1"></polyline>
+                    </svg>
+                </span></span>
+            </h1>
+        </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-12 md:mb-16">
-            <div>
-                <h1 id="hero-headline" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl uppercase-text leading-none font-headline">
-                    <span class="line-wrapper">A DESIGN</span><br>
-                    <span class="line-wrapper">PARTNER THAT</span><br>
-                    <span class="line-wrapper">DOESNT DROP</span><br>
-                    <span class="line-wrapper">THE BALL
-                        <svg id="hero-arrow-svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="">
-                            <line x1="7" y1="7" x2="17" y2="17" pathLength="1"></line>
-                            <polyline points="7 17 17 17 17 7" pathLength="1"></polyline>
-                        </svg>
-                    </span>
-                </h1>
-            </div>
-            <div class="lg:pl-8">
-                <p id="hero-subheadline" class="text-base md:text-lg font-montserrat-bold uppercase-text mb-4">
+             <div class="lg:col-start-2"> <p id="hero-subheadline" class="text-base md:text-lg font-montserrat-bold uppercase-text mb-4">
                     FOR BUSINESSES WHO NEED<br>
                     GOOD CREATIVE WITHOUT<br>
                     THE HASSLE OR HEADACHES.
@@ -479,14 +511,16 @@
                 <a href="#contact" class="hero-cta-link gsap-reveal-from-bottom"> Book an Intro Call </a>
             </div>
         </div>
-        <div id="hero-separator" class="text-[9rem] md:text-[12rem] leading-none font-black text-center inline-block py-8 md:py-10">*</div>
+
+        <div id="hero-separator" class="text-[9rem] md:text-[12rem] leading-none font-black text-center inline-block py-8 md:py-10 animate-spin-slow">*</div>
         <div class="max-w-3xl pb-12 md:pb-16">
              <h2 id="intro-headline" class="text-3xl md:text-4xl uppercase-text mb-4 font-headline">
-                <span class="line-wrapper-hero block"><span class="line-content-hero">STOP STRUGGLING WITH</span></span><br>
-                <span class="line-wrapper-hero block"><span class="line-content-hero">UNRELIABLE FREELANCERS</span></span><br>
-                <span class="line-wrapper-hero block"><span class="line-content-hero">OR BLOATED AGENCY ANTICS.</span></span>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">STOP STRUGGLING WITH</span></span><br>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">UNRELIABLE FREELANCERS</span></span><br>
+                <span class="line-wrapper-anim block"><span class="line-content-anim">OR BLOATED AGENCY ANTICS.</span></span>
              </h2>
-             <p id="intro-paragraph" class="text-base md:text-lg text-gray-400"> That's right. No contracts. No meetings, and no BS. Our service is 100% practitioner led designed to give you nothing but pixel-perfect work capable of winning the hearts, minds, and wallets of your audiences. Don't believe us? See some of it for yourself.
+             <p id="intro-paragraph" class="text-base md:text-lg text-gray-300 font-normal tracking-tight leading-relaxed">
+                That's right. No contracts. No meetings, and no BS. Our service is 100% practitioner led designed to give you nothing but pixel-perfect work capable of winning the hearts, minds, and wallets of your audiences. Don't believe us? See some of it for yourself.
              </p>
         </div>
     </section>
@@ -528,11 +562,11 @@
               <div class="arrowSliding delay3"> <div class="arrow"></div> </div>
             </div>
             <div>
-                 <h3 class="font-headline text-2xl md:text-3xl uppercase-text gsap-reveal-text">
-                     STOP WAITING MONTHS AND SETTLING FOR MEDIOCRITY.
+                 <h3 id="cta-headline" class="font-headline text-2xl md:text-3xl uppercase-text">
+                    <span class="line-wrapper-anim block"><span class="line-content-anim">STOP WAITING MONTHS AND SETTLING FOR MEDIOCRITY.</span></span>
                  </h3>
-                 <p class="text-lg text-gray-300 gsap-reveal">
-                     START GETTING THE GOOD WORK YOUR BUSINESS NEEDS IN DAYS OR WEEKS INSTEAD.
+                 <p id="cta-subtext" class="text-lg text-gray-300">
+                     <span class="line-wrapper-anim block"><span class="line-content-anim">START GETTING THE GOOD WORK YOUR BUSINESS NEEDS IN DAYS OR WEEKS INSTEAD.</span></span>
                  </p>
             </div>
         </section>
@@ -559,8 +593,7 @@
         </section>
 
         <section id="work" data-bgcolor="#000000" class="mb-24 md:mb-32 scroll-mt-20">
-             <h2 id="work-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
-                 DAAS GOOD WORK
+             <h2 id="work-headline" class="text-4xl md:text-5xl uppercase-text mb-16 font-headline"> DAAS GOOD WORK
              </h2>
              <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-16 md:mb-20">
                  <div class="portfolio-item col-span-2 md:col-span-2 lg:col-span-2 row-span-2"> <img src="https://placehold.co/600x600/1f2937/ffffff?text=Portfolio+Item+1" alt="Website Design Example"> </div>
@@ -575,7 +608,7 @@
              <div id="asset-list-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
                  <div class="md:col-span-1 text-left pt-8 md:pt-0 md:self-end">
                      <p id="asset-intro-text" class="text-sm uppercase-text mb-4 text-gray-400"> WE DESIGN KEY ASSETS AND EXPERIENCES THAT HELP YOU CONNECT WITH YOUR CUSTOMERS </p>
-                     <hr class="border-t-2 border-accent-red max-w-[100px] ml-0 gsap-reveal">
+                     <hr class="border-t-2 border-accent-red max-w-[100px] ml-0 md:ml-auto md:mr-0 gsap-reveal">
                  </div>
                  <div id="asset-list" class="md:col-span-2 text-left md:text-right">
                       <p class="asset-item uppercase-text font-bold leading-tight mb-1 text-lg">Logos</p>
@@ -598,39 +631,38 @@
              </section>
 
         <section id="services" data-bgcolor="#FF0000" class="mb-24 md:mb-32 scroll-mt-20">
-             <h2 id="services-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
-                 SERVICES
+             <h2 id="services-headline" class="text-4xl md:text-5xl uppercase-text mb-16 font-headline"> SERVICES
              </h2>
              <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50">
                      <div class="flex items-center mb-2">
                          <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/layout-template.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
                          <h3 class="font-montserrat-bold text-2xl uppercase-text">WEB DESIGN</h3>
                      </div>
                      <p class="text-gray-400 pl-9">Creating visually stunning and highly functional websites tailored to your brand.</p>
                  </div>
-                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50">
                      <div class="flex items-center mb-2">
                          <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/palette.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
                          <h3 class="font-montserrat-bold text-2xl uppercase-text">BRANDING</h3>
                      </div>
                      <p class="text-gray-400 pl-9">Developing strong brand identities that resonate with your target audience.</p>
                  </div>
-                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50">
                      <div class="flex items-center mb-2">
                          <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/mouse-pointer-click.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
                          <h3 class="font-montserrat-bold text-2xl uppercase-text">UI/UX DESIGN</h3>
                      </div>
                      <p class="text-gray-400 pl-9">Designing intuitive and engaging user interfaces for optimal user experience.</p>
                  </div>
-                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50">
                      <div class="flex items-center mb-2">
                           <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/image.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
                          <h3 class="font-montserrat-bold text-2xl uppercase-text">GRAPHIC DESIGN</h3>
                      </div>
                      <p class="text-gray-400 pl-9">Crafting compelling visuals for digital and print media.</p>
                  </div>
-                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50 gsap-reveal">
+                 <div class="service-card group border-l-4 border-white pl-6 py-4 rounded-r-lg bg-gray-900/50">
                      <div class="flex items-center mb-2">
                          <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/message-circle.svg" alt="" class="service-icon w-6 h-6 mr-3 text-white opacity-80 filter brightness-0 invert-[1] transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">
                          <h3 class="font-montserrat-bold text-2xl uppercase-text">CONSULTING</h3>
@@ -641,8 +673,7 @@
          </section>
 
         <section id="pricing" data-bgcolor="#1f2937" class="mb-24 md:mb-32 scroll-mt-20">
-             <h2 id="pricing-headline" class="text-4xl md:text-5xl uppercase-text mb-12 font-headline">
-                 PRICING PLANS
+             <h2 id="pricing-headline" class="text-4xl md:text-5xl uppercase-text mb-16 font-headline"> PRICING PLANS
              </h2>
              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                  <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
@@ -656,7 +687,7 @@
                          <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/pause-circle.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Pause / Cancel Anytime</p>
                      </div>
                      <div class="text-3xl font-bold mb-6">$1k / mo.</div>
-                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors magnetic-button">Get Started</button>
                  </div>
                  <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
                      <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD</h3>
@@ -669,7 +700,7 @@
                          <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/pause-circle.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Pause / Cancel Anytime</p>
                      </div>
                      <div class="text-3xl font-bold mb-6">$10k / mo.</div>
-                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors magnetic-button">Get Started</button>
                  </div>
                  <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
                      <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD</h3>
@@ -682,7 +713,7 @@
                          <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/users.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Dedicated Team</p>
                      </div>
                      <div class="text-3xl font-bold mb-6">$15k Flat Fee</div>
-                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Get Started</button>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors magnetic-button">Get Started</button>
                  </div>
                  <div class="border border-gray-700 p-6 rounded-lg flex flex-col bg-gray-900 transition-transform duration-300 hover:scale-105 hover:border-accent-red gsap-reveal">
                      <h3 class="font-montserrat-bold text-xl uppercase-text mb-2">DAAS GOOD, BUT I</h3>
@@ -695,15 +726,14 @@
                          <p class="group"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/refresh-cw.svg" alt="" class="feature-icon transition-transform duration-300 ease-in-out group-hover:rotate-12 group-hover:scale-110">Unlimited Revisions</p>
                      </div>
                      <div class="text-3xl font-bold mb-6">Custom</div>
-                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors">Build Your Plan</button>
+                     <button class="button w-full bg-accent-red hover:bg-red-700 text-white font-bold py-3 px-4 uppercase-text text-sm transition-colors magnetic-button">Build Your Plan</button>
                  </div>
              </div>
          </section>
 
          <section id="faq" data-bgcolor="#e5e7eb" class="py-16 md:py-24 scroll-mt-20 text-black">
             <div class="max-w-4xl mx-auto px-6 md:px-8 lg:px-16">
-                <h2 id="faq-headline" class="text-4xl md:text-5xl font-headline mb-12">
-                    FREQUENTLY ASKED QUESTIONS.
+                <h2 id="faq-headline" class="text-4xl md:text-5xl font-headline mb-16"> FREQUENTLY ASKED QUESTIONS.
                 </h2>
                 <div class="faq-container space-y-4">
                     <div class="faq-item">
@@ -774,32 +804,51 @@
          </section>
 
         <section id="testimonials" data-bgcolor="#000000" class="mb-16 md:mb-24 scroll-mt-20">
-             <h2 id="testimonials-headline" class="text-2xl md:text-3xl font-headline mb-8 md:mb-12 text-center">
-                WHAT PEOPLE SAY ABOUT THE DAAS GOOD DIFFERENCE:
+             <h2 id="testimonials-headline" class="text-2xl md:text-3xl font-headline mb-16 text-center"> WHAT PEOPLE SAY ABOUT THE DAAS GOOD DIFFERENCE:
              </h2>
             <div class="testimonial-grid max-w-6xl mx-auto">
-                <div class="testimonial-item gsap-reveal">
-                    <div class="testimonial-quote-mark">“</div>
-                    <p class="testimonial-text"> NOT ONLY DID DAAS GOOD TURN VAGUE IDEAS INTO A FULL-FLESHED SAAS, BUT THEY WENT BEYOND BY CREATING AN ENTIRE BRAND FOR EASYGEN. AND LET ME TELL YOU: THAT, WAS GOOD. </p>
-                    <footer class="testimonial-attribution"> Ruben Hassid <span>Founder of EasyGen</span> </footer>
+                <div class="testimonial-item">
+                    <svg class="absolute top-0 left-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none" aria-hidden="true">
+                         <rect width="100%" height="100%" fill="none" stroke="#FF0000" stroke-width="2" pathLength="1" class="testimonial-border-rect"/>
+                    </svg>
+                    <div class="relative z-10 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="testimonial-quote-mark">“</div>
+                            <p class="testimonial-text"> NOT ONLY DID DAAS GOOD TURN VAGUE IDEAS INTO A FULL-FLESHED SAAS, BUT THEY WENT BEYOND BY CREATING AN ENTIRE BRAND FOR EASYGEN. AND LET ME TELL YOU: THAT, WAS GOOD. </p>
+                        </div>
+                        <footer class="testimonial-attribution"> Ruben Hassid <span>Founder of EasyGen</span> </footer>
+                    </div>
                 </div>
-                <div class="testimonial-item gsap-reveal">
-                    <div class="testimonial-quote-mark">“</div>
-                    <p class="testimonial-text"> I'D NEVER WORK WITH ANOTHER AGENCY OR FREELANCER AGAIN. THEIR SERVICE IS THAT GOOD. THE SPEED AND QUALITY ARE UNMATCHED. PERIOD. </p>
-                    <footer class="testimonial-attribution"> Satisfied Client <span>CMO, B2C Apparel Company</span> </footer>
+                <div class="testimonial-item">
+                     <svg class="absolute top-0 left-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none" aria-hidden="true">
+                         <rect width="100%" height="100%" fill="none" stroke="#FF0000" stroke-width="2" pathLength="1" class="testimonial-border-rect"/>
+                    </svg>
+                    <div class="relative z-10 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="testimonial-quote-mark">“</div>
+                            <p class="testimonial-text"> I'D NEVER WORK WITH ANOTHER AGENCY OR FREELANCER AGAIN. THEIR SERVICE IS THAT GOOD. THE SPEED AND QUALITY ARE UNMATCHED. PERIOD. </p>
+                        </div>
+                        <footer class="testimonial-attribution"> Satisfied Client <span>CMO, B2C Apparel Company</span> </footer>
+                    </div>
                 </div>
-                <div class="testimonial-item gsap-reveal">
-                    <div class="testimonial-quote-mark">“</div>
-                    <p class="testimonial-text"> DAAS GOOD DID EVERYTHING FROM BUSINESS CARDS TO THE LOOK AND FEEL OF OUR WEBSITE, ALL IN SUCH A SHORT PERIOD OF TIME. IT HELPED US A TON. </p>
-                    <footer class="testimonial-attribution"> Another Happy Founder <span>Founder, B2B MedTech Company</span> </footer>
+                <div class="testimonial-item">
+                     <svg class="absolute top-0 left-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="none" aria-hidden="true">
+                         <rect width="100%" height="100%" fill="none" stroke="#FF0000" stroke-width="2" pathLength="1" class="testimonial-border-rect"/>
+                    </svg>
+                    <div class="relative z-10 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="testimonial-quote-mark">“</div>
+                            <p class="testimonial-text"> DAAS GOOD DID EVERYTHING FROM BUSINESS CARDS TO THE LOOK AND FEEL OF OUR WEBSITE, ALL IN SUCH A SHORT PERIOD OF TIME. IT HELPED US A TON. </p>
+                        </div>
+                        <footer class="testimonial-attribution"> Another Happy Founder <span>Founder, B2B MedTech Company</span> </footer>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="booking" data-bgcolor="#000000" class="py-16 md:py-24 text-white">
              <div class="max-w-4xl mx-auto px-6 md:px-8 lg:px-16">
-                 <h2 id="booking-headline" class="text-3xl md:text-4xl font-headline mb-12 text-center">
-                     DAAS IT. STILL HAVE QUESTIONS? BOOK DISCOVERY CALL
+                 <h2 id="booking-headline" class="text-3xl md:text-4xl font-headline mb-16 text-center"> DAAS IT. STILL HAVE QUESTIONS? BOOK DISCOVERY CALL
                  </h2>
                  <div class="calendly-widget-container gsap-reveal">
                      <div class="calendly-inline-widget" data-url="https://calendly.com/amotchojr/30min" style="min-width:320px;height:750px;"></div>
@@ -949,8 +998,6 @@
                              wordWrapper.style.display = 'inline-block';
                              wordWrapper.style.overflow = 'hidden';
                              wordWrapper.style.verticalAlign = 'bottom';
-                             wordWrapper.style.marginRight = '0.25em';
-                             wordWrapper.style.marginBottom = '0.2em';
                              const wordSpan = document.createElement('span');
                              wordSpan.classList.add('word');
                              wordSpan.textContent = word;
@@ -958,11 +1005,15 @@
                              wordWrapper.appendChild(wordSpan);
                              element.appendChild(wordWrapper);
                              wordSpans.push(wordSpan);
+                             element.appendChild(document.createTextNode(' '));
                          });
                      } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'br') {
                          element.appendChild(node.cloneNode(false));
                      }
                  });
+                 if (element.lastChild && element.lastChild.nodeType === Node.TEXT_NODE && element.lastChild.textContent.trim() === '') {
+                    element.removeChild(element.lastChild);
+                 }
                  return wordSpans;
              }
 
@@ -982,55 +1033,56 @@
 
             let heroTimeline = gsap.timeline({ delay: 0.5 });
 
-            const headline = document.getElementById('hero-headline');
-            if (headline) {
-                const lines = headline.querySelectorAll('.line-wrapper');
-                let allHeadlineWords = [];
-                lines.forEach((line) => {
-                    const svgElement = line.querySelector('svg');
-                    let textContent = line.textContent.trim();
-                    let words = textContent.split(' ').filter(word => word.length > 0);
-                    line.innerHTML = '';
-                    words.forEach((word, wordIndex) => {
-                        const wordWrapper = document.createElement('span');
-                        wordWrapper.classList.add('word-wrapper');
-                        wordWrapper.style.marginRight = '0'; wordWrapper.style.marginBottom = '0';
-                        wordWrapper.style.display = 'inline-block'; wordWrapper.style.overflow = 'hidden'; wordWrapper.style.verticalAlign = 'bottom';
-                        const wordSpan = document.createElement('span');
-                        wordSpan.textContent = word; wordSpan.classList.add('word'); wordSpan.style.display = 'block';
-                        wordSpan.style.paddingBottom = '0.1em'; wordSpan.style.marginBottom = '-0.1em';
-                        wordWrapper.appendChild(wordSpan); line.appendChild(wordWrapper);
-                        if (wordIndex < words.length - 1 || svgElement) { line.appendChild(document.createTextNode(' ')); }
-                        allHeadlineWords.push(wordSpan);
-                    });
-                    if (svgElement) { line.appendChild(svgElement); }
-                });
-                gsap.set(allHeadlineWords, { yPercent: 105, opacity: 0 });
-                heroTimeline.to(allHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.6, ease: 'power3.out' });
+            // --- Hero Headline Line Reveal ---
+            const heroHeadlineLines = gsap.utils.toArray('#hero-headline .line-content-anim');
+            if (heroHeadlineLines.length > 0) {
+                gsap.set(heroHeadlineLines, { yPercent: 105, opacity: 0 }); // Initial state
+                heroTimeline.to(heroHeadlineLines, {
+                    yPercent: 0,
+                    opacity: 1,
+                    stagger: 0.1, // Stagger reveal of each line
+                    duration: 0.8, // Adjust duration
+                    ease: 'power3.out'
+                }, 0); // Add to timeline at position 0 (after delay)
 
+                // Animate SVG arrow after lines start
                 const arrowSVG = document.getElementById('hero-arrow-svg');
                 if (arrowSVG) {
                     const paths = arrowSVG.querySelectorAll('line, polyline');
                     if (paths.length > 0) {
                          gsap.set(paths, { strokeDashoffset: 1 });
-                         heroTimeline.to(paths, { strokeDashoffset: 0, duration: 0.6, ease: 'power1.inOut', stagger: 0.2 }, "-=0.2");
+                         heroTimeline.to(paths, { strokeDashoffset: 0, duration: 0.6, ease: 'power1.inOut', stagger: 0.2 }, 0.3); // Start slightly after lines
                     }
                 }
             }
 
+
             const heroSubheadlineWords = splitTextIntoWords('#hero-subheadline');
             if (heroSubheadlineWords.length > 0) {
                 gsap.set(heroSubheadlineWords, { yPercent: 100, opacity: 0 });
-                heroTimeline.to(heroSubheadlineWords, { yPercent: 0, opacity: 1, stagger: 0.06, duration: 0.7, ease: 'power3.out' }, "-=0.3");
+                // Ensure this animation starts after the headline animation in the timeline
+                heroTimeline.to(heroSubheadlineWords, {
+                    yPercent: 0,
+                    opacity: 1,
+                    stagger: 0.06,
+                    duration: 0.7,
+                    ease: 'power3.out'
+                }, 0.5); // Adjust start time relative to headline/arrow reveal
             }
 
-             heroTimeline.to(".hero-cta-link.gsap-reveal-from-bottom", { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, "-=0.4");
+             heroTimeline.to(".hero-cta-link.gsap-reveal-from-bottom", {
+                 opacity: 1,
+                 y: 0,
+                 duration: 0.5,
+                 ease: 'power2.out'
+             }, "-=0.4"); // Adjust timing relative to subheadline reveal
 
-            const introLines = gsap.utils.toArray('#intro-headline .line-content-hero');
-            if (introLines.length > 0) {
-                gsap.set(introLines, { yPercent: 105, opacity: 0 });
-                gsap.to(introLines, { yPercent: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '#intro-headline', start: 'top 85%', toggleActions: 'play none none none' } });
-            }
+
+             const introLines = gsap.utils.toArray('#intro-headline .line-content-anim'); // Use generic class
+             if (introLines.length > 0) {
+                 gsap.set(introLines, { yPercent: 105, opacity: 0 });
+                 gsap.to(introLines, { yPercent: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '#intro-headline', start: 'top 85%', toggleActions: 'play none none none' } });
+             }
 
             const introParagraphWords = splitTextIntoWords('#intro-paragraph');
             if (introParagraphWords.length > 0) {
@@ -1093,14 +1145,31 @@
                  gsap.to(faqHeadlineWords, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: "#faq-headline", start: "top 85%", toggleActions: "play none none none" } });
              }
 
+             // --- CTA Section Line Reveal ---
+             const ctaHeadlineLine = document.querySelector('#cta-headline .line-content-anim');
+             if (ctaHeadlineLine) {
+                 gsap.set(ctaHeadlineLine, { yPercent: 105, opacity: 0 });
+                 gsap.to(ctaHeadlineLine, {
+                     yPercent: 0, opacity: 1, duration: 1.2, ease: 'power3.out', // Slower duration
+                     scrollTrigger: { trigger: '#cta-headline', start: 'top 85%', toggleActions: 'play none none none' }
+                 });
+             }
+             const ctaSubtextLine = document.querySelector('#cta-subtext .line-content-anim');
+             if(ctaSubtextLine) {
+                 gsap.set(ctaSubtextLine, { yPercent: 105, opacity: 0 });
+                 gsap.to(ctaSubtextLine, {
+                     yPercent: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: 0.15, // Slower duration
+                     scrollTrigger: { trigger: '#cta-subtext', start: 'top 90%', toggleActions: 'play none none none' }
+                 });
+             }
+
 
             // Filter elements with specific animations from general reveals
-            const animatedTextIds = ['intro-headline', 'hero-headline', 'work-headline', 'services-headline', 'pricing-headline', 'about-headline', 'partnerships-headline', 'testimonials-headline', 'faq-headline'];
-            const animatedRevealIds = ['good-fast-cheap-container', 'intro-paragraph', 'about-paragraph']; // Add IDs of elements with custom word/line reveals
+            const animatedTextIds = ['intro-headline', 'hero-headline', 'work-headline', 'services-headline', 'pricing-headline', 'about-headline', 'partnerships-headline', 'testimonials-headline', 'faq-headline', 'booking-headline', 'cta-headline'];
+            const animatedRevealIds = ['good-fast-cheap-container', 'intro-paragraph', 'about-paragraph', 'cta-subtext'];
 
             const textElements = gsap.utils.toArray('.gsap-reveal-text');
             textElements.forEach(el => {
-                // Exclude headlines with specific animations
                 if (!animatedTextIds.includes(el.id)) {
                     gsap.to(el, { opacity: 1, y: 0, duration: 2.0, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
                 }
@@ -1108,22 +1177,29 @@
 
             const revealElements = gsap.utils.toArray('.gsap-reveal');
             revealElements.forEach(el => {
-                // Exclude elements with specific animations or within sections with custom item animations
-                if (!animatedRevealIds.includes(el.id) && !el.closest('#newsletter') && !el.closest('#faq')) {
+                 // Exclude elements with specific animations or within sections with custom item animations
+                 if (!animatedRevealIds.includes(el.id) && !el.closest('#newsletter') && !el.closest('#faq') && !el.closest('#booking') && !el.closest('.testimonial-item') && !el.closest('.service-card') && !el.closest('#cta-section')) {
                     gsap.to(el, { opacity: 1, y: 0, duration: 2.0, delay: 0.1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
                 }
             });
 
-             const staggerReveal = (containerSelector, itemSelector) => {
-                 const container = document.querySelector(containerSelector);
-                 if (!container) return;
-                 // Exclude items within newsletter or faq sections
-                 const items = gsap.utils.toArray(container.querySelectorAll(itemSelector))
-                                .filter(item => !item.closest('#newsletter') && !item.closest('#faq'));
-                 if (items.length === 0) return;
-                 gsap.set(items, { opacity: 0, y: 30 });
-                 gsap.to(items, { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2, scrollTrigger: { trigger: container, start: 'top 80%', toggleActions: 'play none none none' } });
-             };
+             // --- Service Icon Scroll Animation ---
+             const serviceCards = gsap.utils.toArray('#services .service-card');
+             if (serviceCards.length > 0) {
+                 gsap.set(serviceCards, { opacity: 0, y: 30 }); // Initial state for cards
+                 gsap.set('#services .service-icon', { opacity: 0, scale: 0.5, rotation: -30 }); // Initial state for icons
+
+                 gsap.to(serviceCards, {
+                     opacity: 1, y: 0, duration: 1.0, stagger: 0.15, ease: 'expo.out',
+                     scrollTrigger: { trigger: '#services .grid', start: 'top 80%', toggleActions: 'play none none none' }
+                 });
+                 gsap.to('#services .service-icon', {
+                     opacity: 1, scale: 1, rotation: 0, duration: 0.8, stagger: 0.15, delay: 0.2, // Stagger icons slightly after cards
+                     ease: 'back.out(1.7)',
+                     scrollTrigger: { trigger: '#services .grid', start: 'top 80%', toggleActions: 'play none none none' }
+                 });
+             }
+
 
              const portfolioItems = gsap.utils.toArray('.portfolio-item');
              portfolioItems.forEach((item, index) => {
@@ -1135,9 +1211,13 @@
                  }
              });
 
-             staggerReveal('#services .grid', '.gsap-reveal');
-             staggerReveal('#pricing .grid', '.gsap-reveal');
-             staggerReveal('.testimonial-grid', '.testimonial-item');
+             // Stagger reveal for pricing grid (kept simple)
+             const pricingItems = gsap.utils.toArray('#pricing .grid > .gsap-reveal');
+              if(pricingItems.length > 0) {
+                 gsap.set(pricingItems, { opacity: 0, y: 30 });
+                 gsap.to(pricingItems, { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2, scrollTrigger: { trigger: '#pricing .grid', start: 'top 80%', toggleActions: 'play none none none' } });
+              }
+
              // Stagger reveal for newsletter columns (form side only now)
              const newsletterItems = gsap.utils.toArray('#newsletter .grid > .gsap-reveal');
              if(newsletterItems.length > 0) {
@@ -1252,6 +1332,69 @@
                      scrollTrigger: { trigger: calendlyWidget, start: "top 90%", toggleActions: "play none none none" }
                  });
              }
+
+             // --- SVG Border Drawing (Testimonials) ---
+             const testimonialItems = gsap.utils.toArray('.testimonial-item');
+             if (testimonialItems.length > 0) {
+                 gsap.set(testimonialItems, { opacity: 0, y: 30 }); // Initial state for item fade-in
+                 gsap.set('.testimonial-border-rect', { strokeDashoffset: 1 }); // Initial state for border
+
+                 testimonialItems.forEach((item) => {
+                     const borderRect = item.querySelector('.testimonial-border-rect');
+                     const tl = gsap.timeline({
+                         scrollTrigger: {
+                             trigger: item,
+                             start: 'top 85%', // Adjust trigger point as needed
+                             toggleActions: 'play none none none'
+                         }
+                     });
+                     tl.to(item, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
+                       .to(borderRect, { strokeDashoffset: 0, duration: 1.2, ease: 'power1.inOut' }, "-=0.5"); // Animate border slightly overlapping
+                 });
+             }
+
+             // --- Magnetic Buttons ---
+             const magneticButtons = gsap.utils.toArray('.magnetic-button');
+             magneticButtons.forEach(btn => {
+                 let bbox; // Declare bbox variable
+
+                 // Recalculate bounds on mouse enter
+                 btn.addEventListener('mouseenter', () => {
+                     bbox = btn.getBoundingClientRect();
+                 });
+
+                 btn.addEventListener('mousemove', (e) => {
+                     if (!bbox) bbox = btn.getBoundingClientRect(); // Ensure bbox is calculated if mousemove fires before mouseenter
+                     const mouseX = e.clientX;
+                     const mouseY = e.clientY;
+                     const btnCenterX = bbox.left + bbox.width / 2;
+                     const btnCenterY = bbox.top + bbox.height / 2;
+
+                     const deltaX = mouseX - btnCenterX;
+                     const deltaY = mouseY - btnCenterY;
+
+                     // Reduce the movement range for a subtler effect
+                     const moveX = gsap.utils.mapRange(-bbox.width * 1.5, bbox.width * 1.5, -6, 6, deltaX); // Increased range, decreased movement
+                     const moveY = gsap.utils.mapRange(-bbox.height * 1.5, bbox.height * 1.5, -6, 6, deltaY); // Increased range, decreased movement
+
+                     gsap.to(btn, { x: moveX, y: moveY, duration: 0.4, ease: 'power2.out' }); // Slightly longer duration
+                 });
+
+                 btn.addEventListener('mouseleave', () => {
+                     gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' }); // Slightly slower elastic return
+                 });
+
+                 // Recalculate bounds on window resize
+                 window.addEventListener('resize', () => {
+                    // Check if the button is still in the DOM before getting bounds
+                    if (document.body.contains(btn)) {
+                        bbox = btn.getBoundingClientRect();
+                    }
+                 });
+             });
+
+             // --- Scroll-Linked Rotation for Hero Separator Asterisk ---
+             // Removed as per user request for continuous spin instead
 
 
         }); // End DOMContentLoaded
